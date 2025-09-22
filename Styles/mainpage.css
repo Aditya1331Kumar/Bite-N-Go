@@ -1,0 +1,225 @@
+/* General Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", sans-serif;
+}
+
+body {
+  background: #f9f9f9;
+  color: #333;
+}
+
+/* Top Navbar */
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(90deg, #28a745, #ff8800);
+  color: white;
+  padding: 15px 30px;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.topnav button {
+  margin-left: 15px;
+  background: white;
+  color: #333;
+  padding: 8px 16px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.topnav button:hover {
+  background: #28a745;
+  color: white;
+}
+
+.logout-btn {
+  background: #ff4444;
+  color: white;
+}
+
+.logout-btn:hover {
+  background: darkred;
+}
+
+/* Layout */
+.layout {
+  display: flex;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 220px;
+  min-height: calc(100vh - 60px);
+  background: #fff;
+  border-right: 2px solid #ddd;
+  padding-top: 20px;
+  transition: 0.3s;
+}
+
+.sidebar ul {
+  list-style: none;
+}
+
+.sidebar li {
+  padding: 15px 20px;
+  cursor: pointer;
+  border-left: 5px solid transparent;
+  transition: 0.3s;
+}
+
+.sidebar li:hover {
+  background: #f1f1f1;
+  border-left: 5px solid #28a745;
+}
+
+.sidebar li.active {
+  background: #eaffea;
+  border-left: 5px solid #28a745;
+  font-weight: bold;
+}
+
+/* Content */
+.content {
+  flex: 1;
+  padding: 20px;
+}
+
+.welcome h1 {
+  font-size: 2rem;
+  color: #28a745;
+}
+
+.welcome p {
+  margin-top: 5px;
+  font-style: italic;
+  color: #555;
+}
+
+/* Cards */
+.plan-card,
+.meal-card,
+.quick-actions {
+  background: white;
+  border-radius: 10px;
+  padding: 20px;
+  margin: 20px 0;
+  box-shadow: 0px 4px 6px rgba(0,0,0,0.1);
+  animation: fadeIn 1s ease;
+}
+
+.plan-card h2,
+.meal-card h2,
+.quick-actions h2 {
+  margin-bottom: 15px;
+  color: #ff8800;
+}
+
+.status {
+  padding: 4px 8px;
+  border-radius: 5px;
+  font-weight: bold;
+}
+
+.status.active { background: #d4edda; color: #155724; }
+.status.pending { background: #fff3cd; color: #856404; }
+.status.delivered { background: #cce5ff; color: #004085; }
+
+.renew-btn {
+  margin-top: 10px;
+  padding: 10px 20px;
+  background: #28a745;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.renew-btn:hover {
+  background: #218838;
+}
+
+/* Meals */
+.meal-menu {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.meal {
+  flex: 1;
+  min-width: 200px;
+  background: #f8f9fa;
+  padding: 15px;
+  border-radius: 8px;
+  transition: 0.3s;
+}
+
+.meal:hover {
+  background: #eaffea;
+}
+
+/* Quick Actions */
+.actions {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.actions button {
+  flex: 1;
+  min-width: 150px;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  background: linear-gradient(90deg, #28a745, #ff8800);
+  color: white;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+.actions button:hover {
+  transform: scale(1.05);
+  background: linear-gradient(90deg, #ff8800, #28a745);
+}
+
+/* Footer */
+.footer {
+  text-align: center;
+  padding: 15px;
+  background: #28a745;
+  color: white;
+  margin-top: 20px;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .layout {
+    flex-direction: column;
+  }
+  .sidebar {
+    width: 100%;
+    display: flex;
+    overflow-x: auto;
+  }
+  .sidebar li {
+    flex: 1;
+    text-align: center;
+  }
+}

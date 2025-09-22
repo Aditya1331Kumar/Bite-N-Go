@@ -1,0 +1,125 @@
+/* =======================
+   Extra Transitions + Hover Effects
+   (Enhancements for existing HTML CSS)
+======================= */
+
+/* Smooth transition globally */
+* {
+  transition: all 0.3s ease-in-out;
+}
+
+/* Navbar buttons hover */
+.navbar-menu button:hover {
+  background-color: #fff !important;
+  color: #28a745 !important;
+  transform: translateY(-3px);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+/* Sidebar links */
+.sidebar ul li a {
+  position: relative;
+  overflow: hidden;
+}
+.sidebar ul li a::after {
+  content: "";
+  position: absolute;
+  left: -100%;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  background: rgba(255,122,0,0.15);
+  transition: left 0.3s ease;
+  z-index: -1;
+}
+.sidebar ul li a:hover::after {
+  left: 0;
+}
+.sidebar ul li a:hover {
+  color: #28a745 !important;
+  transform: translateX(6px);
+}
+
+/* Cards hover */
+.card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.card:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+/* Buttons general */
+button {
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+button:hover {
+  transform: scale(1.05);
+}
+
+/* Current plan button */
+.current-plan button:hover {
+  background-color: #ff7a00 !important;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+/* Quick actions buttons */
+.quick-actions button {
+  position: relative;
+  overflow: hidden;
+}
+.quick-actions button::before {
+  content: "";
+  position: absolute;
+  left: -100%;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255,255,255,0.15);
+  transition: left 0.4s ease;
+}
+.quick-actions button:hover::before {
+  left: 0;
+}
+.quick-actions button:hover {
+  background: #28a745 !important;
+}
+
+/* Meal status animations */
+.status-pending {
+  animation: pulseOrange 1.5s infinite;
+}
+.status-delivered {
+  animation: pulseGreen 1.5s infinite;
+}
+.status-cancelled {
+  animation: pulseRed 1.5s infinite;
+}
+
+@keyframes pulseOrange {
+  0%,100% { color: orange; }
+  50% { color: #ffb84d; }
+}
+@keyframes pulseGreen {
+  0%,100% { color: green; }
+  50% { color: #4dff88; }
+}
+@keyframes pulseRed {
+  0%,100% { color: red; }
+  50% { color: #ff6666; }
+}
+
+/* Header fade in */
+.header {
+  animation: fadeDown 0.7s ease;
+}
+@keyframes fadeDown {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Footer hover */
+.footer:hover {
+  color: #28a745;
+  letter-spacing: 1px;
+}

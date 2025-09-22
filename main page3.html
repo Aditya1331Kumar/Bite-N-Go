@@ -1,0 +1,431 @@
+<!doctype html>
+<html lang="hi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Immediately Tiffin — Dashboard</title>
+  <!-- NOTE: Styling will be provided in a separate CSS file when you say "yes" -->
+  <meta name="description" content="Immediately Tiffin - Student Tiffin Dashboard (HTML structure). CSS will be provided after confirmation." />
+ <link rel="stylesheet" href="mainpage3.css">
+ <style>
+    /* Minimal inline safety styles so layout doesn't completely break if CSS not added yet */
+    :root {
+      --accent-green: #28a745;
+      --accent-orange: #ff7a18;
+      --bg: #f7f7f9;
+      --card-bg: #ffffff;
+      --muted: #6b6b6b;
+      --max-width: 1200px;
+    }
+    html,body{height:100%;margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial;}
+    .app {min-height:100vh;background:var(--bg);display:flex;flex-direction:column;}
+    .container {max-width:var(--max-width);margin:0 auto;width:100%;padding:1rem;}
+    /* Basic layout placeholders */
+    .topnav{display:flex;align-items:center;justify-content:space-between;padding:0.75rem 1rem;background:#fff;border-bottom:1px solid #e6e6e6;box-shadow:0 1px 6px rgba(0,0,0,0.02)}
+    .logo {display:flex;align-items:center;gap:0.75rem;font-weight:700;font-size:1.05rem}
+    .logo .badge {padding:6px 10px;border-radius:8px;font-weight:700}
+    .nav-actions {display:flex;gap:0.5rem;align-items:center}
+    .btn {padding:8px 12px;border-radius:8px;border:0;cursor:pointer;font-weight:600}
+    .btn-ghost {background:transparent;border:1px solid #ddd}
+    .layout {display:flex;gap:1rem;flex:1;padding:1rem 0}
+    .sidebar {width:260px;background:#fff;border-radius:12px;padding:1rem;height:calc(100vh - 120px);overflow:auto;border:1px solid #eee}
+    .main {flex:1;background:transparent}
+    .card {background:var(--card-bg);padding:1rem;border-radius:12px;border:1px solid #eee;margin-bottom:1rem}
+    .card h3{margin:0 0 0.5rem 0}
+    .muted{color:var(--muted);font-size:0.95rem}
+    .footer{padding:1rem 0;text-align:center;color:var(--muted);font-size:0.9rem;margin-top:auto}
+    /* Sidebar items */
+    .nav-list{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:0.5rem}
+    .nav-item{display:flex;align-items:center;gap:0.75rem;padding:0.6rem;border-radius:8px;cursor:pointer}
+    .nav-item.active{background:linear-gradient(90deg, rgba(40,167,69,0.08), rgba(255,122,24,0.04));border-left:4px solid var(--accent-green)}
+    .quick-actions{display:flex;gap:0.5rem;flex-wrap:wrap}
+    /* Responsive fallback */
+    @media (max-width:900px){
+      .sidebar{display:none}
+      .topnav{padding:0.5rem}
+    }
+  </style>
+</head>
+<body>
+  <div class="app" id="appRoot">
+    <!-- Top Navigation -->
+    <header class="topnav container" role="banner">
+      <div class="logo" aria-label="Immediately Tiffin logo">
+        <!-- simple logo SVG -->
+        <div class="badge" style="background:var(--accent-green);color:white;border-radius:8px;padding:6px 10px;font-size:0.9rem">
+          IT
+        </div>
+        <div>
+          <div style="font-size:1.05rem">Immediately Tiffin</div>
+          <div class="muted" style="font-size:0.78rem;margin-top:2px">Healthy meals for students</div>
+        </div>
+      </div>
+
+      <div class="nav-actions" role="navigation" aria-label="Top navigation">
+        <button class="btn btn-ghost" id="btnPlans" title="Plans">Plans</button>
+        <button class="btn btn-ghost" id="btnDashboard" title="Dashboard">Dashboard</button>
+        <button class="btn" id="btnLogout" title="Logout" aria-label="Logout" style="background:var(--accent-orange);color:white;border:0">Logout</button>
+      </div>
+    </header>
+
+    <!-- Page layout -->
+    <div class="container layout" role="main">
+      <!-- Sidebar -->
+      <aside class="sidebar" aria-label="Sidebar navigation">
+        <nav aria-label="Main sidebar">
+          <ul class="nav-list" id="sidebarList">
+            <li class="nav-item active" data-key="dashboard" tabindex="0">
+              <!-- icon -->
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 13h8V3H3v10zM3 21h8v-6H3v6zM13 21h8V11h-8v10zM13 3v6h8V3h-8z" fill="currentColor"></path></svg>
+              <span>Dashboard</span>
+            </li>
+            <li class="nav-item" data-key="vendors" tabindex="0">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 7h16v2H4zM4 11h16v10H4z" fill="currentColor"></path></svg>
+              <span>Vendors</span>
+            </li>
+            <li class="nav-item" data-key="history" tabindex="0">
+              <svg width="18" height="18" viewBox="0 0 24 24"><path d="M13 3a9 9 0 100 18 9 9 0 000-18zM13 7v6l4 2" fill="currentColor"></path></svg>
+              <span>History</span>
+            </li>
+            <li class="nav-item" data-key="current-plan" tabindex="0">
+              <svg width="18" height="18" viewBox="0 0 24 24"><path d="M3 6h18v2H3zM3 10h18v8H3z" fill="currentColor"></path></svg>
+              <span>Current Plan</span>
+            </li>
+            <li class="nav-item" data-key="setting" tabindex="0">
+              <svg width="18" height="18" viewBox="0 0 24 24"><path d="M12 15.5A3.5 3.5 0 1112 8.5a3.5 3.5 0 010 7zM19.4 15a7.2 7.2 0 00.1-2 7.2 7.2 0 00-.1-2l2.1-1.6a.5.5 0 00.1-.7l-2-3.4a.5.5 0 00-.6-.2l-2.5 1a7.1 7.1 0 00-1.7-.99L14.5 2.5a.5.5 0 00-.5-.5h-4a.5.5 0 00-.5.5L9 4.2c-.6.2-1.1.5-1.6.9l-2.5-1a.5.5 0 00-.6.2l-2 3.4a.5.5 0 00.1.7L4.6 11c-.1.7-.1 1.4 0 2l-2.1 1.6a.5.5 0 00-.1.7l2 3.4a.5.5 0 00.6.2l2.5-1c.5.4 1 .7 1.6.9l.5 1.7a.5.5 0 00.5.5h4a.5.5 0 00.5-.5l.5-1.7c.6-.2 1.1-.5 1.6-.9l2.5 1a.5.5 0 00.6-.2l2-3.4a.5.5 0 00-.1-.7L19.4 15z" fill="currentColor"></path></svg>
+              <span>Setting</span>
+            </li>
+            <li class="nav-item" data-key="logout" tabindex="0">
+              <svg width="18" height="18" viewBox="0 0 24 24"><path d="M16 13v-2H7V7l-5 5 5 5v-4zM20 3h-8v2h8v14h-8v2h8a2 2 0 002-2V5a2 2 0 00-2-2z" fill="currentColor"></path></svg>
+              <span>Logout</span>
+            </li>
+
+            <li style="height:1px;background:#f0f0f0;margin:8px 0"></li>
+
+            <li style="font-weight:700;padding-top:6px;color:var(--muted)">Quick Actions</li>
+
+            <li class="nav-item" data-key="quick-pause" tabindex="0">
+              <svg width="18" height="18" viewBox="0 0 24 24"><path d="M6 4h4v16H6zM14 4h4v16h-4z" fill="currentColor"></path></svg>
+              <span>Pause Subscription</span>
+            </li>
+            <li class="nav-item" data-key="quick-renew" tabindex="0">
+              <svg width="18" height="18" viewBox="0 0 24 24"><path d="M12 6V3L8 7l4 4V8a4 4 0 110 8 4 4 0 100-8z" fill="currentColor"></path></svg>
+              <span>Renew Now</span>
+            </li>
+
+            <li style="height:1px;background:#f0f0f0;margin:8px 0"></li>
+            <li style="font-weight:700;padding-top:6px;color:var(--muted)">Other Plans</li>
+            <li class="nav-item" data-key="other-plans" tabindex="0">
+              <svg width="18" height="18" viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zM13 21h8V11h-8v10z" fill="currentColor"></path></svg>
+              <span>Explore Plans</span>
+            </li>
+
+          </ul>
+        </nav>
+
+        <!-- small copyright inside sidebar as well -->
+        <div style="margin-top:1rem;font-size:0.85rem;color:var(--muted)">© <span id="currentYearSidebar"></span> Immediately Tiffin</div>
+      </aside>
+
+      <!-- Main content -->
+      <section class="main" aria-labelledby="mainHeading">
+        <!-- Header area -->
+        <div class="card" role="region" aria-label="Welcome header">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap">
+            <div>
+              <h2 id="mainHeading" style="margin:0;font-size:1.25rem">Welcome back, <span id="userName">Aditya</span> 👋</h2>
+              <p class="muted" id="motivationQuote" style="margin-top:6px">
+                "Consistency builds habits — habits build transformation." <!-- sample motivational quote -->
+              </p>
+            </div>
+
+            <!-- small summary boxes -->
+            <div style="display:flex;gap:0.6rem;align-items:center;flex-wrap:wrap">
+              <div style="padding:8px 12px;border-radius:10px;border:1px solid #eee;background:#fff;text-align:center">
+                <div style="font-size:0.85rem;color:var(--muted)">Active plan</div>
+                <div style="font-weight:700">Monthly Student</div>
+              </div>
+
+              <div style="padding:8px 12px;border-radius:10px;border:1px solid #eee;background:#fff;text-align:center">
+                <div style="font-size:0.85rem;color:var(--muted)">Meals today</div>
+                <div style="font-weight:700">2 (Afternoon, Dinner)</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Grid: Current Plan + Today's Meal Plan -->
+        <div style="display:grid;grid-template-columns:repeat(12,1fr);gap:1rem">
+          <!-- Current Plan card -->
+          <div class="card" style="grid-column:span 5" aria-labelledby="currentPlanHead">
+            <h3 id="currentPlanHead">Current Plan</h3>
+            <p class="muted">Subscription status, plan details and renewal controls</p>
+
+            <div style="display:flex;flex-direction:column;gap:0.8rem;margin-top:0.8rem">
+              <div style="display:flex;justify-content:space-between;align-items:center;gap:1rem">
+                <div>
+                  <div class="muted" style="font-size:0.85rem">Plan name</div>
+                  <div style="font-weight:700">Student Monthly — ₹1299 / month</div>
+                </div>
+                <div style="text-align:right">
+                  <div class="muted" style="font-size:0.85rem">Status</div>
+                  <div id="subscriptionStatus" style="font-weight:700;color:var(--accent-green)">Active</div>
+                </div>
+              </div>
+
+              <div style="display:flex;gap:0.5rem;align-items:center;flex-wrap:wrap">
+                <button class="btn" id="btnRenew" style="background:var(--accent-orange);color:white">Renew</button>
+                <button class="btn btn-ghost" id="btnPause">Pause Subscription</button>
+
+                <div style="margin-left:auto;text-align:right">
+                  <div class="muted" style="font-size:0.85rem">Validity ends</div>
+                  <div id="planExpiry" style="font-weight:700">Oct 18, 2025</div>
+                </div>
+              </div>
+
+              <div style="padding:0.6rem;border-radius:8px;border:1px dashed #eee;background:#fcfcfc">
+                <div style="font-size:0.95rem"><strong>Auto-renew:</strong> Enabled</div>
+                <div class="muted" style="font-size:0.85rem;margin-top:4px">You will receive a reminder 7 days before renewal.</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Today's Meal Plan -->
+          <div class="card" style="grid-column:span 7" aria-labelledby="todayMealHead">
+            <h3 id="todayMealHead">Today's Meal Plan</h3>
+            <p class="muted">Delivery info, menus and delivery status for today</p>
+
+            <div style="display:flex;flex-direction:column;gap:0.9rem;margin-top:0.8rem">
+              <!-- Delivery boy info -->
+              <div style="display:flex;gap:1rem;align-items:center;justify-content:space-between">
+                <div style="display:flex;gap:0.75rem;align-items:center">
+                  <div style="width:56px;height:56px;border-radius:10px;background:#f0f6f2;display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--accent-green)">DB</div>
+                  <div>
+                    <div style="font-weight:700">Delivery boy: <span id="deliveryBoyName">Ramesh Kumar</span></div>
+                    <div class="muted" style="font-size:0.9rem">Phone: <a href="tel:+919876543210" id="deliveryBoyPhone">+91 98765 43210</a></div>
+                  </div>
+                </div>
+
+                <div style="text-align:right">
+                  <div class="muted">Delivery status</div>
+                  <div id="todayDeliveryStatus" style="font-weight:700;color:#eaa200">Pending</div>
+                </div>
+              </div>
+
+              <!-- Menus -->
+              <div style="display:flex;gap:1rem;flex-wrap:wrap">
+                <div style="flex:1;min-width:220px;padding:0.8rem;border-radius:10px;border:1px solid #eee;background:#fff">
+                  <div style="display:flex;justify-content:space-between;align-items:center">
+                    <div>
+                      <div class="muted">Afternoon</div>
+                      <div style="font-weight:700">Rajma Chawal + Salad</div>
+                    </div>
+                    <div class="muted">₹45</div>
+                  </div>
+                  <div class="muted" style="margin-top:6px">Diet: Regular | Spicy level: Medium</div>
+                </div>
+
+                <div style="flex:1;min-width:220px;padding:0.8rem;border-radius:10px;border:1px solid #eee;background:#fff">
+                  <div style="display:flex;justify-content:space-between;align-items:center">
+                    <div>
+                      <div class="muted">Dinner</div>
+                      <div style="font-weight:700">Paneer Butter Masala + Roti</div>
+                    </div>
+                    <div class="muted">₹55</div>
+                  </div>
+                  <div class="muted" style="margin-top:6px">Diet: Vegetarian | Spicy level: Low</div>
+                </div>
+              </div>
+
+              <!-- Delivery status controls -->
+              <div style="display:flex;gap:0.5rem;align-items:center;margin-top:0.4rem">
+                <button class="btn btn-ghost" id="markDelivered">Mark Delivered</button>
+                <button class="btn btn-ghost" id="markCanceled">Mark Canceled</button>
+
+                <div style="margin-left:auto" class="muted">Last update: <span id="lastUpdate">—</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Actions and Tools -->
+        <div class="card" role="region" aria-label="Quick actions">
+          <h3>Quick Actions</h3>
+          <p class="muted">Useful controls for common tasks</p>
+
+          <div style="display:flex;gap:0.6rem;flex-wrap:wrap;margin-top:0.8rem">
+            <button class="btn" id="actionPause" style="background:var(--accent-orange);color:white">Pause Subscription</button>
+            <button class="btn btn-ghost" id="actionRenew">Renew Subscription</button>
+            <button class="btn btn-ghost" id="actionReport">Report an Issue</button>
+            <button class="btn btn-ghost" id="actionFeedback">Feedback</button>
+            <button class="btn btn-ghost" id="actionHistory">Order History</button>
+          </div>
+        </div>
+
+        <!-- Some analytics/stat boxes (placeholder) -->
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;margin-top:0.5rem">
+          <div class="card">
+            <div class="muted">Orders this month</div>
+            <div style="font-weight:800;font-size:1.3rem">24</div>
+            <div class="muted" style="margin-top:6px">On-time: 22 • Late: 2</div>
+          </div>
+
+          <div class="card">
+            <div class="muted">Feedback score</div>
+            <div style="font-weight:800;font-size:1.3rem">4.5 / 5</div>
+            <div class="muted" style="margin-top:6px">Based on 86 reviews</div>
+          </div>
+
+          <div class="card">
+            <div class="muted">Active vendors</div>
+            <div style="font-weight:800;font-size:1.3rem">12</div>
+            <div class="muted" style="margin-top:6px">New this month: 2</div>
+          </div>
+        </div>
+
+        <!-- Footer / rights reserved -->
+        <footer class="footer card" role="contentinfo">
+          © <span id="currentYearFooter"></span> Immediately Tiffin. All rights reserved.
+        </footer>
+      </section>
+    </div>
+  </div>
+
+  <!-- Renew Modal (hidden by default) -->
+  <div id="renewModal" role="dialog" aria-modal="true" aria-hidden="true" style="position:fixed;inset:0;display:flex;align-items:center;justify-content:center;padding:1rem;z-index:60;visibility:hidden;opacity:0;transition:opacity .15s">
+    <div style="width:100%;max-width:520px;background:#fff;border-radius:12px;padding:1rem;border:1px solid #eee;box-shadow:0 10px 30px rgba(0,0,0,0.08)">
+      <h3 style="margin-top:0">Renew Subscription</h3>
+      <p class="muted">Confirm renewal for <strong>Student Monthly — ₹1299</strong>. You can choose payment method and confirm renewal.</p>
+
+      <div style="display:flex;gap:0.5rem;margin-top:1rem;flex-wrap:wrap">
+        <label style="display:flex;align-items:center;gap:0.5rem"><input type="radio" name="pay" value="upi" checked> UPI</label>
+        <label style="display:flex;align-items:center;gap:0.5rem"><input type="radio" name="pay" value="card"> Card</label>
+        <label style="display:flex;align-items:center;gap:0.5rem"><input type="radio" name="pay" value="netbanking"> Netbanking</label>
+      </div>
+
+      <div style="display:flex;justify-content:flex-end;gap:0.5rem;margin-top:1rem">
+        <button class="btn btn-ghost" id="cancelRenew">Cancel</button>
+        <button class="btn" id="confirmRenew" style="background:var(--accent-green);color:white">Confirm & Pay</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Basic interactive JS (no external libs)
+    (function(){
+      const year = new Date().getFullYear();
+      document.getElementById('currentYearSidebar').textContent = year;
+      document.getElementById('currentYearFooter').textContent = year;
+
+      // Sidebar nav click behaviour
+      const sidebar = document.getElementById('sidebarList');
+      sidebar.addEventListener('click', (e) => {
+        const li = e.target.closest('.nav-item');
+        if(!li) return;
+        // remove active
+        [...sidebar.querySelectorAll('.nav-item')].forEach(n => n.classList.remove('active'));
+        li.classList.add('active');
+        // For now, only Dashboard UI exists - you can extend to load different pages
+        const key = li.dataset.key;
+        if(key !== 'dashboard'){
+          // show toast (simple)
+          showToast('Page "' + (key || 'unknown') + '" is coming soon.');
+        }
+      });
+
+      // small toast
+      function showToast(msg){
+        const t = document.createElement('div');
+        t.textContent = msg;
+        t.style.position = 'fixed';
+        t.style.right = '16px';
+        t.style.bottom = '16px';
+        t.style.padding = '10px 14px';
+        t.style.background = 'rgba(0,0,0,0.8)';
+        t.style.color = '#fff';
+        t.style.borderRadius = '8px';
+        t.style.zIndex = 9999;
+        document.body.appendChild(t);
+        setTimeout(()=>{ t.style.transition='opacity .3s'; t.style.opacity='0'; }, 1800);
+        setTimeout(()=>{ t.remove(); }, 2200);
+      }
+
+      // Renew modal behaviour
+      const btnRenew = document.getElementById('btnRenew');
+      const renewModal = document.getElementById('renewModal');
+      const cancelRenew = document.getElementById('cancelRenew');
+      const confirmRenew = document.getElementById('confirmRenew');
+
+      function openModal(){
+        renewModal.style.visibility = 'visible';
+        renewModal.style.opacity = '1';
+        renewModal.setAttribute('aria-hidden','false');
+      }
+      function closeModal(){
+        renewModal.style.visibility = 'hidden';
+        renewModal.style.opacity = '0';
+        renewModal.setAttribute('aria-hidden','true');
+      }
+      btnRenew.addEventListener('click', openModal);
+      cancelRenew.addEventListener('click', closeModal);
+
+      confirmRenew.addEventListener('click', function(){
+        // simulate success
+        closeModal();
+        document.getElementById('subscriptionStatus').textContent = 'Active';
+        document.getElementById('planExpiry').textContent = new Date(new Date().setMonth(new Date().getMonth()+1)).toLocaleDateString();
+        showToast('Subscription renewed successfully.');
+      });
+
+      // Delivery status change
+      const markDelivered = document.getElementById('markDelivered');
+      const markCanceled = document.getElementById('markCanceled');
+      const todayDeliveryStatus = document.getElementById('todayDeliveryStatus');
+      const lastUpdate = document.getElementById('lastUpdate');
+
+      function setDelivery(status){
+        todayDeliveryStatus.textContent = status;
+        todayDeliveryStatus.style.color = status === 'Delivered' ? 'var(--accent-green)' : (status === 'Canceled' ? '#d9534f' : '#eaa200');
+        lastUpdate.textContent = new Date().toLocaleString();
+      }
+
+      markDelivered.addEventListener('click', function(){ setDelivery('Delivered'); showToast('Marked delivered'); });
+      markCanceled.addEventListener('click', function(){ setDelivery('Canceled'); showToast('Marked canceled'); });
+
+      // Quick actions
+      document.getElementById('actionPause').addEventListener('click', function(){
+        document.getElementById('subscriptionStatus').textContent = 'Paused';
+        document.getElementById('subscriptionStatus').style.color = '#d88600';
+        showToast('Subscription paused.');
+      });
+      document.getElementById('actionRenew').addEventListener('click', openModal);
+      document.getElementById('actionReport').addEventListener('click', function(){ showToast('Report form will open (not implemented).'); });
+      document.getElementById('actionFeedback').addEventListener('click', function(){ showToast('Feedback modal will open (not implemented).'); });
+      document.getElementById('actionHistory').addEventListener('click', function(){ showToast('Redirecting to Order History (not implemented).'); });
+
+      // Logout
+      document.getElementById('btnLogout').addEventListener('click', function(){
+        // Simple confirmation
+        if(confirm('Are you sure you want to logout?')){
+          showToast('Logged out (simulated).');
+          // In real app, call logout endpoint and redirect
+        }
+      });
+
+      // small keyboard accessibility: nav items toggle on Enter
+      sidebar.addEventListener('keydown', function(e){
+        const li = e.target.closest('.nav-item');
+        if(!li) return;
+        if(e.key === 'Enter' || e.key === ' '){
+          li.click();
+          e.preventDefault();
+        }
+      });
+
+      // initial sample states
+      setDelivery('Pending');
+
+    })();
+  </script>
+</body>
+</html>

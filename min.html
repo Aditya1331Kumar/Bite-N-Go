@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Immediately Tiffin — Student Dashboard</title>
+  <meta name="description" content="Student Dashboard — Immediately Tiffin. Manage subscription, view today's meals, select vendors and check order history.">
+  <link rel="stylesheet" href="Styles/minpage.css">
+  <!-- Fonts (CSS will import actual fonts later) -->
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- NOTE: Styles are separate file (you asked for HTML first). This HTML includes detailed structure, classes and small JS for toggles. -->
+  <style>
+    /* Minimal inline helper to avoid flash-of-unstyled functionality for sidebar toggle.
+       Final styles (colors, layout, animations) will be provided in style.css later. */
+    :root{--invisible:transparent}
+    .no-flicker{opacity:0;transition:opacity .15s}
+  </style>
+</head>
+<body class="no-flicker" id="body">
+
+  <!--
+    PAGE LAYOUT (HTML-only)
+    Top bar (sticky)
+    Left Sidebar (sticky)
+    Right Main Content (dashboard overview)
+    Footer
+  -->
+
+  <!-- ========== TOP NAVBAR (Sticky) ========== -->
+  <header id="topbar" class="topbar" role="banner" aria-label="Top Navigation">
+    <div class="topbar-inner container">
+      <!-- Left: Logo -->
+      <div class="brand" id="brand">
+        <!-- Inline SVG logo mark (keeps HTML-only, colors applied by CSS later) -->
+        <a href="#" class="brand-link" aria-label="Immediately Tiffin Home">
+          <svg class="logo-mark" width="40" height="40" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <rect x="2" y="7" width="20" height="12" rx="2" fill="currentColor"></rect>
+            <path d="M6 7V5a2 2 0 0 1 2-2h8" stroke="white" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"></path>
+          </svg>
+          <span class="brand-name">Immediately <strong>Tiffin</strong></span>
+        </a>
+      </div>
+
+      <!-- Right: Quick Buttons -->
+      <nav class="top-actions" aria-label="Top actions">
+        <button type="button" class="btn top-btn plans-btn" id="plansBtn" title="Plans">Plans</button>
+        <button type="button" class="btn top-btn dashboard-btn" id="dashboardBtn" title="Dashboard">Dashboard</button>
+        <button type="button" class="btn top-btn logout-top" id="logoutTop" title="Logout">Logout</button>
+
+        <!-- Mobile: Hamburger -->
+        <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="sidebar">
+          <span class="hamburger-line"></span>
+          <span class="hamburger-line"></span>
+          <span class="hamburger-line"></span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ========== PAGE BODY: SIDEBAR + CONTENT ========== -->
+  <div class="page-wrap">
+
+    <!-- ========== SIDEBAR (sticky) ========== -->
+    <aside id="sidebar" class="sidebar" role="navigation" aria-label="Main sidebar">
+      <div class="sidebar-inner">
+        <!-- Center the menu items vertically (CSS will do this) -->
+        <ul class="sidebar-menu" role="menu" aria-label="Dashboard menu">
+          <li role="none"><a role="menuitem" tabindex="0" class="menu-item active" data-section="dashboard">📊 <span class="menu-text">Dashboard</span></a></li>
+          <li role="none"><a role="menuitem" tabindex="0" class="menu-item" data-section="vendors">🍱 <span class="menu-text">Vendors</span></a></li>
+          <li role="none"><a role="menuitem" tabindex="0" class="menu-item" data-section="history">📜 <span class="menu-text">History</span></a></li>
+          <li role="none"><a role="menuitem" tabindex="0" class="menu-item" data-section="current-plan">📅 <span class="menu-text">Current Plan</span></a></li>
+          <li role="none"><a role="menuitem" tabindex="0" class="menu-item" data-section="settings">⚙ <span class="menu-text">Settings</span></a></li>
+          <li role="none"><a role="menuitem" tabindex="0" class="menu-item" data-section="logout">🚪 <span class="menu-text">Logout</span></a></li>
+          <li role="none"><a role="menuitem" tabindex="0" class="menu-item" data-section="quick-actions">⚡ <span class="menu-text">Quick Actions</span></a></li>
+          <li role="none"><a role="menuitem" tabindex="0" class="menu-item" data-section="other-plans">🧾 <span class="menu-text">Other Plans</span></a></li>
+        </ul>
+
+        <!-- bottom small footer inside sidebar -->
+        <div class="sidebar-foot" aria-hidden="true">
+          <small class="muted">Ummed Tiffins • Student Panel</small>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ========== MAIN CONTENT (right) ========== -->
+    <main id="main" class="main" role="main" aria-labelledby="dashboardTitle">
+
+      <!-- ---------- DASHBOARD CONTENT (Overview) ---------- -->
+      <section id="dashboardSection" class="section dashboard-section" aria-labelledby="dashboardTitle">
+        <!-- Header / Welcome -->
+        <header class="dashboard-header">
+          <div class="welcome-left">
+            <h1 id="dashboardTitle" class="welcome-title">Welcome, <span class="student-name">Aditya</span> 👋</h1>
+            <p class="welcome-sub">"Stay strong, eat healthy, and achieve greatness every day!"</p>
+          </div>
+          <div class="welcome-right">
+            <!-- small profile box -->
+            <div class="profile-chip" role="region" aria-label="Profile">
+              <img class="avatar" src="https://i.pravatar.cc/80?img=12" alt="Profile photo">
+              <div class="profile-text">
+                <div class="p-name">Aditya</div>
+                <div class="p-meta muted">2nd Year, CSE</div>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <!-- Two-column grid: left = summary cards, right = notifications/summary small -->
+        <div class="dashboard-grid">
+
+          <!-- LEFT COLUMN (main content) -->
+          <div class="col left-col">
+
+            <!-- CURRENT PLAN CARD -->
+            <article class="card current-plan" id="currentPlanCard" aria-labelledby="planTitle">
+              <div class="card-head">
+                <h2 id="planTitle">Current Subscription</h2>
+                <div class="plan-badges">
+                  <!-- badge classes to be colored by CSS: .badge-green .badge-orange -->
+                  <span class="badge badge-green">Active</span>
+                </div>
+              </div>
+
+              <div class="card-body plan-body">
+                <div class="plan-row">
+                  <div class="plan-info">
+                    <div class="plan-name">Monthly Veg Plan</div>
+                    <div class="plan-meta muted">2 meals/day • Auto-renews monthly</div>
+                  </div>
+                  <div class="plan-actions">
+                    <div class="plan-validity">Valid till <strong class="valid-date">30 Sept 2025</strong></div>
+                    <button class="btn btn-green btn-renew" id="renewBtn">Renew</button>
+                  </div>
+                </div>
+
+                <div class="plan-stats">
+                  <div class="stat">
+                    <div class="stat-value">28</div>
+                    <div class="stat-label">Meals left</div>
+                  </div>
+                  <div class="stat">
+                    <div class="stat-value">₹500</div>
+                    <div class="stat-label">Monthly Charge</div>
+                  </div>
+                  <div class="stat">
+                    <div class="stat-value">Auto</div>
+                    <div class="stat-label">Billing</div>
+                  </div>
+                </div>
+              </div>
+            </article>
+
+            <!-- TODAY'S MEAL PLAN -->
+            <article class="card todays-meals" id="todaysMeals" aria-labelledby="mealsTitle">
+              <h2 id="mealsTitle">Today's Meal Plan</h2>
+
+              <!-- Delivery person -->
+              <div class="delivery-info">
+                <div class="delivery-left">
+                  <div class="del-label">Delivery Boy</div>
+                  <div class="del-name">Ravi Kumar</div>
+                </div>
+                <div class="delivery-right">
+                  <a href="tel:+919876543210" class="del-phone">📞 9876543210</a>
+                </div>
+              </div>
+
+              <!-- Meals grid -->
+              <div class="meals-grid">
+                <div class="meal-card meal-afternoon">
+                  <div class="meal-head">
+                    <h3>Afternoon</h3>
+                    <div class="meal-time muted">12:30 PM - 1:30 PM</div>
+                  </div>
+                  <div class="meal-body">
+                    <ul class="meal-items">
+                      <li>Paneer Butter Masala</li>
+                      <li>Chapati (2)</li>
+                      <li>Jeera Rice</li>
+                      <li>Salad</li>
+                    </ul>
+                    <div class="meal-status">
+                      Status: <span class="status status-pending">Pending</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="meal-card meal-dinner">
+                  <div class="meal-head">
+                    <h3>Dinner</h3>
+                    <div class="meal-time muted">08:00 PM - 09:00 PM</div>
+                  </div>
+                  <div class="meal-body">
+                    <ul class="meal-items">
+                      <li>Dal Tadka</li>
+                      <li>Roti (2)</li>
+                      <li>Jeera Rice</li>
+                      <li>Papad</li>
+                    </ul>
+                    <div class="meal-status">
+                      Status: <span class="status status-delivered">Delivered</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </article>
+
+            <!-- QUICK ACTIONS -->
+            <article class="card quick-actions" id="quickActions" aria-labelledby="quickTitle">
+              <h2 id="quickTitle">Quick Actions</h2>
+              <p class="muted">Common tasks you may need right now</p>
+
+              <div class="actions-grid">
+                <button class="action-btn" data-action="pause"><span>⏸</span><span>Pause Subscription</span></button>
+                <button class="action-btn" data-action="renew"><span>🔄</span><span>Renew Subscription</span></button>
+                <button class="action-btn" data-action="report"><span>⚠</span><span>Report Issue</span></button>
+                <button class="action-btn" data-action="feedback"><span>✍</span><span>Give Feedback</span></button>
+                <button class="action-btn" data-action="history"><span>📜</span><span>Order History</span></button>
+              </div>
+            </article>
+
+          </div> <!-- end left-col -->
+
+          <!-- RIGHT COLUMN (sidebar widgets) -->
+          <aside class="col right-col" aria-labelledby="rightWidgetsTitle">
+            <h2 id="rightWidgetsTitle" class="sr-only">Sidebar widgets</h2>
+
+            <!-- NOTIFICATIONS / ANNOUNCEMENTS -->
+            <div class="widget widget-announcements card">
+              <div class="widget-head"><strong>Announcements</strong></div>
+              <ul class="ann-list">
+                <li>🔔 Vendor "Maa ka Khana" added a special paneer dish today.</li>
+                <li>📢 Campus pickup available near Gate 2 from next week.</li>
+                <li>🎉 Refer 3 friends & get 1 free meal.</li>
+              </ul>
+            </div>
+
+            <!-- SUMMARY CARDS -->
+            <div class="widget widget-summary card">
+              <div class="summary-row">
+                <div class="sum-item">
+                  <div class="sum-value">12</div>
+                  <div class="sum-label">Meals consumed</div>
+                </div>
+                <div class="sum-item">
+                  <div class="sum-value">₹1,200</div>
+                  <div class="sum-label">Spent this month</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- SHORTCUTS -->
+            <div class="widget widget-shortcuts card">
+              <div class="widget-head"><strong>Shortcuts</strong></div>
+              <div class="shortcut-list">
+                <a class="shortcut" href="#" data-target="vendors">Explore Vendors →</a>
+                <a class="shortcut" href="#" data-target="plans">View Plans →</a>
+                <a class="shortcut" href="#" data-target="support">Contact Support →</a>
+              </div>
+            </div>
+          </aside>
+
+        </div> <!-- end dashboard-grid -->
+
+        <!-- FOOTER NOTE with reserved rights -->
+        <div class="dashboard-footer">
+          <small class="muted">© 2025 Immediately Tiffin. All Rights Reserved.</small>
+        </div>
+      </section>
+
+      <!-- Placeholder sections for other pages (hidden by default, CSS will show/hide) -->
+      <section id="vendorsSection" class="section hidden" aria-hidden="true">
+        <!-- Vendors page content placeholder -->
+        <div class="card">
+          <h2>Vendors</h2>
+          <p class="muted">Vendor listing and selection UI (cards + filters) will appear here.</p>
+        </div>
+      </section>
+
+      <section id="historySection" class="section hidden" aria-hidden="true">
+        <div class="card">
+          <h2>History</h2>
+          <p class="muted">User order & payment history list will appear here.</p>
+        </div>
+      </section>
+
+      <section id="currentPlanSection" class="section hidden" aria-hidden="true">
+        <div class="card">
+          <h2>Current Plan</h2>
+          <p class="muted">Detailed plan settings & pause/resume options will appear here.</p>
+        </div>
+      </section>
+
+      <section id="settingsSection" class="section hidden" aria-hidden="true">
+        <div class="card">
+          <h2>Settings</h2>
+          <p class="muted">Profile, Security & Preferences.</p>
+        </div>
+      </section>
+
+      <section id="otherPlansSection" class="section hidden" aria-hidden="true">
+        <div class="card">
+          <h2>Other Plans</h2>
+          <p class="muted">Upgrade or choose other plans.</p>
+        </div>
+      </section>
+
+    </main>
+  </div> <!-- end page-wrap -->
+
+  <!-- Simple toast placeholder -->
+  <div id="toast" role="status" aria-live="polite" class="toast hidden">Action done</div>
+
+  <!-- Minimal JS for menu toggle, menu item switching and action buttons.
+       Detailed interactions, firebase integration, and styling will be added later. -->
+  <script>
+    (function () {
+      // small helper
+      function q(sel, root=document){ return root.querySelector(sel); }
+      function qAll(sel, root=document){ return Array.from(root.querySelectorAll(sel)); }
+
+      // remove flicker now that DOM is ready
+      document.getElementById('body').classList.remove('no-flicker');
+
+      // Sidebar menu click -> show section (basic show/hide via data-section attr)
+      const menuItems = qAll('.sidebar-menu .menu-item');
+      const sections = {
+        'dashboard': q('#dashboardSection'),
+        'vendors': q('#vendorsSection'),
+        'history': q('#historySection'),
+        'current-plan': q('#currentPlanSection'),
+        'settings': q('#settingsSection'),
+        'quick-actions': q('#quickActions'),
+        'other-plans': q('#otherPlansSection')
+      };
+
+      function activateMenuItem(targetKey){
+        menuItems.forEach(mi => mi.classList.toggle('active', mi.dataset.section === targetKey));
+        // hide all sections
+        Object.values(sections).forEach(s => { if(s) s.classList.add('hidden'); });
+        // show requested
+        if(sections[targetKey]) {
+          sections[targetKey].classList.remove('hidden');
+          sections[targetKey].removeAttribute('aria-hidden');
+        } else {
+          // if it's quick-actions or other, scroll to or highlight existing
+          if(targetKey === 'quick-actions') {
+            const qa = document.getElementById('quickActions');
+            if(qa){ qa.scrollIntoView({behavior:'smooth'}); qa.classList.add('highlight'); setTimeout(()=>qa.classList.remove('highlight'),900); }
+          }
+        }
+      }
+
+      menuItems.forEach(mi => {
+        mi.addEventListener('click', () => {
+          const key = mi.dataset.section;
+          activateMenuItem(key);
+        });
+      });
+
+      // Topbar buttons: Plans / Dashboard / Logout
+      q('#plansBtn').addEventListener('click', ()=> activateMenuItem('other-plans'));
+      q('#dashboardBtn').addEventListener('click', ()=> activateMenuItem('dashboard'));
+      q('#logoutTop').addEventListener('click', ()=> {
+        // placeholder logout
+        alert('You clicked Logout (demo).');
+      });
+
+      // Hamburger for mobile sidebar toggle
+      const hamburger = q('#hamburger');
+      const sidebar = q('#sidebar');
+      hamburger.addEventListener('click', ()=>{
+        const expanded = hamburger.getAttribute('aria-expanded') === 'true';
+        hamburger.setAttribute('aria-expanded', String(!expanded));
+        sidebar.classList.toggle('open');
+        document.body.classList.toggle('sidebar-open');
+      });
+
+      // Renew button click -> placeholder
+      q('#renewBtn').addEventListener('click', ()=>{
+        showToast('Redirecting to payment (demo)...');
+        // future: open payment modal
+      });
+
+      // Quick action handlers (basic)
+      qAll('.action-btn').forEach(btn=>{
+        btn.addEventListener('click', (e)=>{
+          const action = btn.dataset.action;
+          if(action === 'pause'){
+            showToast('Subscription paused (demo).');
+          } else if(action === 'renew'){
+            showToast('Renew flow (demo).');
+          } else if(action === 'report'){
+            showToast('Open report form (demo).');
+          } else if(action === 'feedback'){
+            showToast('Open feedback form (demo).');
+          } else if(action === 'history'){
+            activateMenuItem('history');
+          }
+        });
+      });
+
+      // small toast util
+      const toastEl = q('#toast');
+      function showToast(msg, ms=1800){
+        toastEl.textContent = msg;
+        toastEl.classList.remove('hidden');
+        toastEl.classList.add('visible');
+        setTimeout(()=>{ toastEl.classList.remove('visible'); toastEl.classList.add('hidden'); }, ms);
+      }
+
+      // keyboard navigation for accessibility (Left/Right to navigate menu)
+      document.addEventListener('keydown', (e)=>{
+        if(e.key === 'ArrowLeft' || e.key === 'ArrowRight'){
+          const activeIndex = menuItems.findIndex(mi => mi.classList.contains('active'));
+          let next = activeIndex;
+          if(e.key === 'ArrowLeft') next = Math.max(0, activeIndex - 1);
+          if(e.key === 'ArrowRight') next = Math.min(menuItems.length-1, activeIndex + 1);
+          menuItems[next].focus();
+          menuItems[next].click();
+        }
+      });
+
+      // demo: auto reveal of announcements (cycle)
+      const annList = qAll('.ann-list li');
+      let annIndex = 0;
+      setInterval(()=>{
+        annList.forEach((li,i)=> li.style.opacity = (i === annIndex ? '1' : '0.45'));
+        annIndex = (annIndex + 1) % annList.length;
+      }, 3500);
+    })();
+  </script>
+</body>
+</html>

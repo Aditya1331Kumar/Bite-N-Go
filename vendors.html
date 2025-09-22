@@ -1,0 +1,333 @@
+<!doctype html>
+<html lang="hi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Vendors — Immediately Tiffin</title>
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Link to external CSS -->
+  <link rel="stylesheet" href="Styles/vendors.css">
+
+  <meta name="description" content="Choose vendors according to your daily meal preferences - Immediately Tiffin vendor marketplace.">
+</head>
+<body>
+  <!-- Sticky Navbar -->
+  <header class="topnav" role="banner" aria-label="Top Navigation">
+    <div class="nav-inner container">
+      <div class="brand" aria-label="Immediately Tiffin Brand">
+        <div class="brand-badge" aria-hidden="true">IT</div>
+        <div class="brand-text">
+          <div class="brand-name">Immediately Tiffin</div>
+          <div class="brand-tag">Healthy meals for students</div>
+        </div>
+      </div>
+
+      <nav class="nav-actions" role="navigation" aria-label="Header Actions">
+        <button class="btn btn-ghost" id="btnHome">Home</button>
+        <button class="btn btn-ghost" id="btnMore">More</button>
+        <button class="btn btn-primary" id="btnLogout">Logout</button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main wrapper -->
+  <main class="main container" role="main">
+    <!-- Header section with quote, search & filter -->
+    <section class="hero card" aria-labelledby="hero-title">
+      <div class="hero-left">
+        <h1 id="hero-title">Choose vendors according to your daily meal preferences</h1>
+        <p class="hero-quote">Find healthy, affordable tiffin vendors near you — filtered by diet, price and meal frequency.</p>
+      </div>
+
+      <div class="hero-right">
+        <div class="search-wrap">
+          <label for="searchInput" class="sr-only">Search vendors</label>
+          <input id="searchInput" type="search" placeholder="Search vendors, dishes, location..." aria-label="Search vendors" />
+          <button id="btnSearch" class="btn btn-search" title="Search">Search</button>
+        </div>
+
+        <div class="filters">
+          <div class="filter-item">
+            <label for="filterDiet">Diet</label>
+            <select id="filterDiet" aria-label="Filter by diet">
+              <option value="all">All</option>
+              <option value="veg">Veg</option>
+              <option value="nonveg">Non-Veg</option>
+              <option value="eggetarian">Eggetarian</option>
+            </select>
+          </div>
+
+          <div class="filter-item">
+            <label for="filterMeals">Meals</label>
+            <select id="filterMeals" aria-label="Filter by meals per day">
+              <option value="all">All</option>
+              <option value="1">1 meal</option>
+              <option value="2">2 meals</option>
+              <option value="3">3 meals</option>
+            </select>
+          </div>
+
+          <div class="filter-item">
+            <label for="filterPrice">Max Price / month</label>
+            <select id="filterPrice" aria-label="Filter by max price">
+              <option value="all">Any</option>
+              <option value="999">₹999</option>
+              <option value="1999">₹1999</option>
+              <option value="2999">₹2999</option>
+              <option value="5000">₹5000</option>
+            </select>
+          </div>
+
+          <div class="filter-item">
+            <button id="btnClearFilters" class="btn btn-ghost small">Clear</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Vendors grid -->
+    <section class="vendors" aria-label="Vendors list" id="vendorsSection">
+      <div class="vendors-grid" id="vendorsGrid" role="list">
+        <!-- Vendor cards inserted by JavaScript (10 vendors) -->
+      </div>
+    </section>
+  </main>
+
+  <!-- Sticky copyright line (bottom) -->
+  <footer class="sticky-footer" role="contentinfo">
+    © <span id="currentYear"></span> Immediately Tiffin. All rights reserved.
+  </footer>
+
+  <!-- Vendor detail modal -->
+  <div id="vendorModal" class="modal" aria-hidden="true" role="dialog" aria-labelledby="modalTitle">
+    <div class="modal-backdrop" id="modalBackdrop"></div>
+    <div class="modal-card" role="document">
+      <button class="modal-close" id="modalClose" aria-label="Close">×</button>
+      <div class="modal-body">
+        <img id="modalImg" alt="vendor image" class="modal-img" />
+        <h3 id="modalTitle">Vendor name</h3>
+        <p id="modalQuote" class="muted">Short quote about vendor.</p>
+
+        <div class="modal-info">
+          <div><strong>Diet:</strong> <span id="modalDiet"></span></div>
+          <div><strong>Meals/day:</strong> <span id="modalMeals"></span></div>
+          <div><strong>Price/month:</strong> ₹ <span id="modalPrice"></span></div>
+          <div><strong>Students buying:</strong> <span id="modalCount"></span></div>
+        </div>
+
+        <p class="modal-desc" id="modalDesc">More detailed description and menu info.</p>
+
+        <div class="modal-actions">
+          <button class="btn btn-primary">Choose Plan</button>
+          <button class="btn btn-ghost" id="modalContact">Contact Vendor</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Template for vendor card (hidden) -->
+  <template id="vendorTemplate">
+    <article class="vendor-card" role="listitem">
+      <div class="vendor-thumb">
+        <img src="" alt="vendor image" />
+      </div>
+      <div class="vendor-body">
+        <h4 class="vendor-name"></h4>
+        <p class="vendor-tag muted"></p>
+
+        <div class="vendor-meta">
+          <div class="small-pill diet"></div>
+          <div class="small-pill meals"></div>
+          <div class="small-pill price"></div>
+        </div>
+
+        <div class="buying-count muted small">Students buying: <span class="count"></span></div>
+
+        <div class="vendor-actions">
+          <button class="btn btn-secondary btn-details">More Details</button>
+        </div>
+      </div>
+    </article>
+  </template>
+
+  <!-- JS: Vendor data + interactions -->
+  <script>
+    // ---------- Sample vendor data (10 vendors) ----------
+    const vendorsData = [
+      { id: 'v1', name: 'Sharma Tiffins', quote: 'Home-style healthy meals', diet:'veg', meals:3, price:2500, count: 42, img:'https://images.unsplash.com/photo-1604908177522-5d89b72b4a82?auto=format&fit=crop&w=800&q=60', desc: 'Rajma-chawal, seasonal sabzi, salad. Fresh & hygienic.' },
+      { id: 'v2', name: 'Raj Catering', quote: 'Tasty & pocket-friendly', diet:'nonveg', meals:2, price:1800, count: 31, img:'https://images.unsplash.com/photo-1546069901-eacef0df6022?auto=format&fit=crop&w=800&q=60', desc: 'Non-veg options available. Rotating menu.' },
+      { id: 'v3', name: 'Green Bites', quote: 'Wholesome vegetarian meals', diet:'veg', meals:3, price:2300, count: 58, img:'https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=800&q=60', desc: 'High-quality ingredients & balanced diet.' },
+      { id: 'v4', name: 'Student Meals Co', quote: 'Quick & nutritious', diet:'eggetarian', meals:2, price:1400, count: 18, img:'https://images.unsplash.com/photo-1526318472351-c75fcf070c36?auto=format&fit=crop&w=800&q=60', desc: 'Egg options with local flavors.' },
+      { id: 'v5', name: 'HomeFlavours', quote: 'Taste of home every day', diet:'veg', meals:3, price:2700, count: 64, img:'https://images.unsplash.com/photo-1549576490-b0b4831ef60a?auto=format&fit=crop&w=800&q=60', desc: 'Traditional recipes, healthy portion sizes.' },
+      { id: 'v6', name: 'Dhaba Delights', quote: 'Authentic dhaba-style meals', diet:'nonveg', meals:3, price:3000, count: 72, img:'https://images.unsplash.com/photo-1512058564366-c9e7aa3a1d4b?auto=format&fit=crop&w=800&q=60', desc: 'Hearty meals, lots of variety.' },
+      { id: 'v7', name: 'Budget Bites', quote: 'Affordable & filling', diet:'veg', meals:2, price:999, count: 21, img:'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=800&q=60', desc: 'Best for tight budgets.' },
+      { id: 'v8', name: 'Paneer Palace', quote: 'Paneer lovers paradise', diet:'veg', meals:2, price:1700, count: 27, img:'https://images.unsplash.com/photo-1604908177222-6f9f651f7b08?auto=format&fit=crop&w=800&q=60', desc: 'Paneer-based recipes daily.' },
+      { id: 'v9', name: 'QuickLunch', quote: 'Fast delivery, hot meals', diet:'nonveg', meals:1, price:850, count: 12, img:'https://images.unsplash.com/photo-1526318472351-c75fcf070c36?auto=format&fit=crop&w=800&q=60', desc: 'Single-meal plans for commuters.' },
+      { id: 'v10', name: 'Mama\'s Kitchen', quote: 'Care in every bite', diet:'veg', meals:3, price:2999, count: 95, img:'https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=800&q=60', desc: 'Crowd favorite, premium ingredients.' },
+    ];
+
+    // ---------- DOM references ----------
+    const vendorsGrid = document.getElementById('vendorsGrid');
+    const vendorTemplate = document.getElementById('vendorTemplate');
+    const searchInput = document.getElementById('searchInput');
+    const btnSearch = document.getElementById('btnSearch');
+    const filterDiet = document.getElementById('filterDiet');
+    const filterMeals = document.getElementById('filterMeals');
+    const filterPrice = document.getElementById('filterPrice');
+    const btnClearFilters = document.getElementById('btnClearFilters');
+
+    const modal = document.getElementById('vendorModal');
+    const modalBackdrop = document.getElementById('modalBackdrop');
+    const modalClose = document.getElementById('modalClose');
+    const modalImg = document.getElementById('modalImg');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalQuote = document.getElementById('modalQuote');
+    const modalDiet = document.getElementById('modalDiet');
+    const modalMeals = document.getElementById('modalMeals');
+    const modalPrice = document.getElementById('modalPrice');
+    const modalCount = document.getElementById('modalCount');
+    const modalDesc = document.getElementById('modalDesc');
+
+    // populate year
+    document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+    // ---------- Render vendors ----------
+    function renderVendors(list) {
+      vendorsGrid.innerHTML = '';
+      if(!list.length) {
+        vendorsGrid.innerHTML = '<div class="no-results card">No vendors found. Try adjusting filters.</div>';
+        return;
+      }
+      list.forEach(v => {
+        const clone = vendorTemplate.content.cloneNode(true);
+        const article = clone.querySelector('.vendor-card');
+        article.dataset.id = v.id;
+
+        const img = article.querySelector('.vendor-thumb img');
+        img.src = v.img;
+        img.alt = v.name + " image";
+
+        article.querySelector('.vendor-name').textContent = v.name;
+        article.querySelector('.vendor-tag').textContent = v.quote;
+        article.querySelector('.diet').textContent = v.diet === 'veg' ? 'Veg' : (v.diet === 'nonveg' ? 'Non-Veg' : 'Eggetarian');
+        article.querySelector('.meals').textContent = v.meals + ' meals';
+        article.querySelector('.price').textContent = '₹' + v.price + '/mo';
+        article.querySelector('.count').textContent = v.count;
+
+        const btnDetails = article.querySelector('.btn-details');
+        btnDetails.addEventListener('click', () => openModal(v));
+
+        vendorsGrid.appendChild(clone);
+      });
+    }
+
+    // initial render
+    renderVendors(vendorsData);
+
+    // ---------- Search & Filters ----------
+    function applyFilters() {
+      const q = (searchInput.value || '').trim().toLowerCase();
+      const diet = filterDiet.value;
+      const meals = filterMeals.value;
+      const price = filterPrice.value;
+
+      const filtered = vendorsData.filter(v => {
+        // search
+        const inSearch = !q || (v.name + ' ' + v.quote + ' ' + v.desc).toLowerCase().includes(q);
+
+        // diet
+        const dietMatch = diet === 'all' || v.diet === diet;
+
+        // meals
+        const mealsMatch = meals === 'all' || String(v.meals) === meals;
+
+        // price
+        const priceMatch = price === 'all' || v.price <= Number(price);
+
+        return inSearch && dietMatch && mealsMatch && priceMatch;
+      });
+
+      renderVendors(filtered);
+    }
+
+    btnSearch.addEventListener('click', applyFilters);
+    searchInput && searchInput.addEventListener('keydown', (e) => { if(e.key === 'Enter') applyFilters(); });
+    filterDiet.addEventListener('change', applyFilters);
+    filterMeals.addEventListener('change', applyFilters);
+    filterPrice.addEventListener('change', applyFilters);
+    btnClearFilters.addEventListener('click', () => {
+      searchInput.value = '';
+      filterDiet.value = 'all';
+      filterMeals.value = 'all';
+      filterPrice.value = 'all';
+      applyFilters();
+    });
+
+    // ---------- Modal ----------
+    function openModal(v) {
+      modalImg.src = v.img;
+      modalTitle.textContent = v.name;
+      modalQuote.textContent = v.quote;
+      modalDiet.textContent = v.diet === 'veg' ? 'Veg' : (v.diet === 'nonveg' ? 'Non-Veg' : 'Eggetarian');
+      modalMeals.textContent = v.meals;
+      modalPrice.textContent = v.price;
+      modalCount.textContent = v.count;
+      modalDesc.textContent = v.desc;
+
+      modal.setAttribute('aria-hidden','false');
+      modal.classList.add('open');
+      document.body.classList.add('no-scroll');
+    }
+
+    function closeModal() {
+      modal.setAttribute('aria-hidden','true');
+      modal.classList.remove('open');
+      document.body.classList.remove('no-scroll');
+    }
+
+    modalBackdrop.addEventListener('click', closeModal);
+    modalClose.addEventListener('click', closeModal);
+    document.addEventListener('keydown', (e) => { if(e.key === 'Escape') closeModal(); });
+
+    // ---------- Sticky header shadow on scroll ----------
+    const topnav = document.querySelector('.topnav');
+    window.addEventListener('scroll', () => {
+      const sc = window.scrollY;
+      if(sc > 8) topnav.classList.add('scrolled'); else topnav.classList.remove('scrolled');
+    });
+
+    // ---------- Accessibility: focus trap in modal (basic) ----------
+    modal.addEventListener('keydown', (e) => {
+      if(e.key === 'Tab') {
+        e.preventDefault();
+      }
+    });
+
+    // ---------- small demo interactions for nav buttons ----------
+    document.getElementById('btnHome').addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+    document.getElementById('btnMore').addEventListener('click', () => {
+      alert('More options will be available soon.');
+    });
+    document.getElementById('btnLogout').addEventListener('click', () => {
+      if(confirm('Are you sure you want to logout?')) {
+        alert('Logged out (demo). Redirecting to login.');
+        window.location.href = 'signin.html'; // change as per your routing
+      }
+    });
+
+    // ---------- mobile: sticky footer padding fix ----------
+    function adjustMainPadding() {
+      const footerHeight = document.querySelector('.sticky-footer').offsetHeight;
+      document.querySelector('.main').style.paddingBottom = footerHeight + 20 + 'px';
+    }
+    window.addEventListener('resize', adjustMainPadding);
+    window.addEventListener('load', adjustMainPadding);
+
+  </script>
+</body>
+</html>

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tiffin Service Dashboard</title>
+  <link rel="stylesheet" href="Styles/mainpage.css">
+</head>
+<body>
+  <!-- Top Navbar -->
+  <header class="topbar">
+    <div class="logo">🍱 Immediately Tiffin</div>
+    <nav class="topnav">
+      <button>Plans</button>
+      <button>Dashboard</button>
+      <button class="logout-btn">Logout</button>
+    </nav>
+  </header>
+
+  <!-- Layout -->
+  <div class="layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <ul>
+        <li class="active">Dashboard</li>
+        <li>Vendors</li>
+        <li>History</li>
+        <li>Current Plan</li>
+        <li>Settings</li>
+        <li>Logout</li>
+        <li>Quick Actions</li>
+        <li>Other Plans</li>
+      </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="content">
+      <!-- Welcome Header -->
+      <section class="welcome">
+        <h1>Welcome Back, Student 👋</h1>
+        <p>"Stay strong, eat healthy, and achieve greatness every day!"</p>
+      </section>
+
+      <!-- Current Plan -->
+      <section class="plan-card">
+        <h2>Current Subscription</h2>
+        <p>Status: <span class="status active">Active</span></p>
+        <p>Plan: <strong>Monthly Veg Plan</strong></p>
+        <p>Valid till: <span class="date">30 Sept 2025</span></p>
+        <button class="renew-btn">Renew Now</button>
+      </section>
+
+      <!-- Today’s Meal -->
+      <section class="meal-card">
+        <h2>Today's Meals</h2>
+        <div class="meal-info">
+          <p>Delivery Boy: <strong>Ravi Kumar</strong> 📞 9876543210</p>
+        </div>
+        <div class="meal-menu">
+          <div class="meal">
+            <h3>Afternoon</h3>
+            <p>Paneer Butter Masala, Roti, Rice, Salad</p>
+            <p>Status: <span class="status pending">Pending</span></p>
+          </div>
+          <div class="meal">
+            <h3>Dinner</h3>
+            <p>Dal Tadka, Jeera Rice, Papad</p>
+            <p>Status: <span class="status delivered">Delivered</span></p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Quick Actions -->
+      <section class="quick-actions">
+        <h2>Quick Actions</h2>
+        <div class="actions">
+          <button>Pause Subscription</button>
+          <button>Renew Subscription</button>
+          <button>Report Issue</button>
+          <button>Feedback</button>
+          <button>Order History</button>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <p>© 2025 Immediately Tiffin. All Rights Reserved.</p>
+  </footer>
+</body>
+</html>

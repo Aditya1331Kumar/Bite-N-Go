@@ -1,13 +1,11 @@
-/* ===========================
-   Ummed Tiffins — style.css
-   Theme: Green (#27ae60) + Orange (#f39c12) + White
-   =========================== */
 
 /* Basic Reset */
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html,body { height: 100%; font-family: 'Poppins', sans-serif; color: #222; -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; }
 img { max-width:100%; display:block; }
 a { text-decoration:none; color:inherit; }
+
+
 
 /* Container helper */
 .container { width: min(1100px, 92%); margin: 0 auto; }
@@ -26,6 +24,9 @@ a { text-decoration:none; color:inherit; }
 }
 .btn:hover{ transform: translateY(-3px); box-shadow: 0 8px 20px rgba(33,33,33,0.08); }
 
+
+
+
 /* Primary */
 .btn.primary { background: linear-gradient(90deg,#27ae60,#1abc4a); color:#fff; border: 0; }
 .btn.primary.large { padding: 14px 26px; font-size:1.05rem; border-radius: 30px; }
@@ -34,6 +35,9 @@ a { text-decoration:none; color:inherit; }
 /* Outline */
 .btn.outline { background: transparent; color:#27ae60; border: 2px solid rgba(39,174,96,0.12); }
 .btn.outline:hover { background: rgba(39,174,96,0.06); }
+
+
+
 
 /* ----------------------
    Header / Navbar
@@ -164,3 +168,183 @@ a { text-decoration:none; color:inherit; }
 
 /* small helpers */
 .muted { color:#999; font-size:0.95rem; }
+
+
+
+
+
+@media (max-width: 900px) {
+  /* layout */
+  .hero-grid { grid-template-columns: 1fr; gap: 18px; align-items: start; }
+  .hero { padding: 28px 0; min-height: 60vh; }
+
+  /* header / nav */
+  .hamburger { display: flex; }
+  .nav { display: none; }
+  .nav.open {
+    display: flex;
+    position: fixed;
+    left: 12px;
+    right: 12px;
+    top: 66px;
+    background: #fff;
+    padding: 16px;
+    border-radius: 12px;
+    box-shadow: 0 20px 50px rgba(10,10,10,0.12);
+    flex-direction: column;
+    gap: 12px;
+    z-index: 1200;
+    width: auto;
+  }
+  .nav-links { gap: 10px; }
+  .nav-links li a { padding: 12px 14px; font-size: 1rem; display: block; border-radius: 8px; }
+
+  /* hero content */
+  .hero-text h1 { font-size: 1.75rem; line-height: 1.1; }
+  .lead { font-size: 0.98rem; }
+  .hero-ctas { display: flex; gap: 12px; flex-direction: column; align-items: stretch; }
+  .hero-ctas .btn { width: 100%; }
+
+  /* hero card */
+  .hero-card { width: 100%; }
+  .card-preview img { height: 180px; object-fit: cover; }
+
+  /* CTA bar */
+  .cta-inner { flex-direction: column; gap: 12px; text-align: center; }
+
+  /* spacing tweaks */
+  .container { width: min(950px, 94%); }
+
+  /* reveal spacing on smaller screens */
+  .reveal { transition-duration: .5s; }
+}
+
+@media (max-width: 720px) {
+  /* typography */
+  .hero-text h1 { font-size: 1.5rem; }
+  .section-title { font-size: 1.4rem; }
+
+  /* highlights -> vertical */
+  .highlights { flex-direction: column; align-items: flex-start; gap: 8px; font-weight: 600; }
+
+  /* cards and grids stack */
+  .cards-grid, .steps-grid, .vendors-grid, .plans-grid, .testi-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  /* cards adjustments */
+  .feature-card, .step, .vendor-card, .plan-card, .testi-card {
+    padding: 16px;
+    border-radius: 12px;
+  }
+
+  /* hero card image smaller */
+  .card-preview img { height: 160px; }
+
+  /* plan card ribbon reposition for touch */
+  .plan-card .ribbon { top: 10px; right: 10px; padding: 5px 8px; font-size: 0.78rem; }
+
+  /* nav CTA inside mobile menu: bigger touch targets */
+  .nav-cta { width: 100%; display: flex; flex-direction: column; gap: 10px; }
+  .nav-cta .btn { width: 100%; padding: 12px; }
+
+  /* testimonials footer spacing */
+  .testi-card footer { text-align: left; }
+
+  /* modal adjustments */
+  .modal .modal-content { width: calc(100% - 36px); margin: 6% auto; max-width: 520px; border-radius: 12px; }
+  .modal .close-btn { top: 10px; right: 10px; }
+}
+
+@media (max-width: 540px) {
+  /* base sizing and container tightening */
+  html, body { -webkit-text-size-adjust: 100%; }
+  .container { width: 94%; }
+
+  /* header text smaller */
+  .brand-text .name { font-size: 0.95rem; }
+  .brand-text .sub { font-size: 0.95rem; }
+
+  /* hero */
+  .hero { padding: 18px 0; min-height: 55vh; }
+  .hero-text h1 { font-size: 1.35rem; }
+  .lead { font-size: 0.95rem; }
+
+  /* stack hero highlights and reduce icon size */
+  .highlights { font-size: 0.95rem; gap: 8px; }
+  .card-info h4 { font-size: 1rem; }
+  .card-info p { font-size: 0.92rem; }
+
+  /* plan cards */
+  .plan-price { font-size: 1.3rem; }
+  .plan-features { padding-left: 12px; font-size: 0.94rem; }
+
+  /* footer -> vertical columns */
+  .footer-grid { grid-template-columns: 1fr; gap: 12px; }
+  .foot-subscribe { display: flex; flex-direction: column; align-items: stretch; }
+  .foot-subscribe input { margin-right: 0; margin-bottom: 8px; width: 100%; }
+  .foot-subscribe button { width: 100%; }
+
+  /* payments icon smaller */
+  .payments img { height: 26px; }
+
+  /* vendor info stack */
+  .vendor-info { flex-direction: column; align-items: flex-start; gap: 6px; text-align: left; }
+  .vendor-info h4 { margin-bottom: 4px; }
+
+  /* modal full width feel */
+  .modal .modal-content { width: calc(100% - 28px); margin: 4% auto; max-width: 460px; }
+}
+
+@media (max-width: 420px) {
+  /* compact typography */
+  .hero-text h1 { font-size: 1.15rem; }
+  .section-title { font-size: 1.2rem; }
+  .lead { font-size: 0.9rem; }
+
+  /* buttons slightly smaller */
+  .btn { padding: 8px 12px; border-radius: 10px; }
+  .btn.primary.large { padding: 12px 18px; font-size: 0.98rem; border-radius: 22px; }
+
+  /* hero card image reduction */
+  .card-preview img { height: 140px; }
+
+  /* plan features spacing */
+  .plan-features { font-size: 0.9rem; padding-left: 10px; }
+
+  /* footer bottom smaller */
+  .footer-bottom { font-size: 0.85rem; padding: 10px 0; }
+
+  /* modal adjustments for very small devices */
+  .modal .modal-content { width: calc(100% - 18px); margin: 3% auto; max-width: 420px; border-radius: 10px; }
+  .modal .modal-content .login-box, .modal .modal-content .signup-box { padding: 14px; }
+  .modal .close-btn { width: 30px; height: 30px; line-height: 30px; font-size: 0.95rem; }
+}
+
+@media (max-width: 360px) {
+  /* reduce base font slightly for very small screens to avoid overflow */
+  html { font-size: 14px; }
+
+  /* hero tight */
+  .hero-text h1 { font-size: 1.05rem; }
+  .hero { padding: 14px 0; }
+
+  /* stack CTA spacing */
+  .hero-ctas { gap: 10px; }
+  .hero-ctas .btn { padding: 10px; font-size: 0.95rem; }
+
+  /* card preview minimal height */
+  .card-preview img { height: 120px; }
+
+  /* plans: tighten */
+  .plan-card { padding: 14px; }
+  .plan-price { font-size: 1.15rem; }
+
+  /* footer: compact subscribe */
+  .foot-subscribe input { padding: 8px; }
+  .payments img { height: 22px; }
+
+  /* ensure nav open covers full height if needed */
+  .nav.open { top: 56px; left: 8px; right: 8px; bottom: auto; max-height: calc(100vh - 72px); overflow: auto; }
+}

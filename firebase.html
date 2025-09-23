@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login / Signup</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f8f9fa;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .container {
+      background: white;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+      width: 350px;
+      text-align: center;
+    }
+    input {
+      width: 90%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+    }
+    button {
+      width: 95%;
+      padding: 10px;
+      margin: 10px 0;
+      border: none;
+      background: #007bff;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+    .toggle-link {
+      color: #007bff;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h2 id="form-title">Login</h2>
+    <input type="email" id="email" placeholder="Enter Email" required />
+    <input type="password" id="password" placeholder="Enter Password" required />
+    <button id="action-btn">Login</button>
+    <p>
+      <span id="toggle-text">Don't have an account?</span>
+      <span class="toggle-link" id="toggle-form">Sign Up</span>
+    </p>
+  </div>
+
+  <script type="module">
+    // Firebase SDKs
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-analytics.js";
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword }
+      from "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
+
+    // Firebase Config
+    const firebaseConfig = {
+      apiKey: "AIzaSyDh5N6JTHYU0qjodJNUF7Yo76G5tt8AcX0",
+      authDomain: "bite-n-go.firebaseapp.com",
+      projectId: "bite-n-go",
+      storageBucket: "bite-n-go.firebasestorage.app",
+      messagingSenderId: "892092521856",
+      appId: "1:892092521856:web:1adb53b64a08d1270b7565",
+      measurementId: "G-EF3ZM1CZFW"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+    const auth = getAuth(app);
+
+    // Elements
+    const formTitle = document.getElementById("form-title");
+    const actionBtn = document.getElementById("action-btn");
+    const toggleForm = document.getElementById("toggle-form");
+    const toggleText = document.getElementById("toggle-text");
+    const email = document.getElementById("email");
+    const password = document.getElementById("password");
+
+    let isLogin = true;
+
+    // Toggle Login / Signup
+    toggleForm.addEventListener("click", () => {
+      isLogin = !isLogin;
+      if (isLogin) {
+        formTitle.textContent = "Login";
+        actionBtn.textContent = "Login";
+        toggleText.textContent = "Don't have an account?";
+        toggleForm.textContent = "Sign Up";
+      } else {
+        formTitle.textContent = "Sign Up";
+        actionBtn.textContent = "Sign Up";
+        toggleText.textContent = "Already have an account?";
+        toggleForm.textContent = "Login";
+      }
+    });
+
+    // Action button click
+    actionBtn.addEventListener("click", async () => {
+      const emailVal = email.value;
+      const passwordVal = password.value;
+
+      try {
+        if (isLogin) {
+          await signInWithEmailAndPassword(auth, emailVal, passwordVal);
+          alert("Login Successful!");
+          window.location.href = "dashboard.html"; // redirect after login
+        } else {
+          await createUserWithEmailAndPassword(auth, emailVal, passwordVal);
+          alert("Signup Successful!");
+          window.location.href = "dashboard.html"; // redirect after signup
+        }
+      } catch (error) {
+        alert(error.message);
+      }
+    });
+  </script>
+</body>
+</html>

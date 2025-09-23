@@ -418,60 +418,55 @@
     }
   </script>
 
-  <!-- Google Sign-in integration -->
-  <script>
-    // Replace with provided client id
-    const GOOGLE_CLIENT_ID = "873653918721-747gjfc6crgurmatt6bsfb26qkl3d5i0.apps.googleusercontent.com";
+  <script type="module">
+  // Firebase SDKs import
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
+  import { getAuth, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
 
-    // Callback that receives the ID token (JWT)
-    function handleCredentialResponse(response) {
-      // response.credential -> ID token (JWT)
-      // decode payload for quick client-side use (optional)
-      function parseJwt(token) {
-        try {
-          const base64Url = token.split('.')[1];
-          const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-          const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
-            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-          }).join(''));
-          return JSON.parse(jsonPayload);
-        } catch (e) {
-          return null;
-        }
-      }
+  // Firebase Config
+  const firebaseConfig = {
+    apiKey: "AIzaSyDh5N6JTHYU0qjodJNUF7Yo76G5tt8AcX0",
+    authDomain: "bite-n-go.firebaseapp.com",
+    projectId: "bite-n-go",
+    storageBucket: "bite-n-go.firebasestorage.app",
+    messagingSenderId: "892092521856",
+    appId: "1:892092521856:web:1adb53b64a08d1270b7565",
+    measurementId: "G-EF3ZM1CZFW"
+  };
 
-      const payload = parseJwt(response.credential);
-      // close any open modal
-      document.getElementById('loginModal').style.display = 'none';
-      document.getElementById('signupModal').style.display = 'none';
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const provider = new GoogleAuthProvider();
 
-      // OPTIONAL: you should send the ID token to your server for verification and session creation.
-      // For now, redirect to vendors page after successful sign-in.
-      // (You can also check payload.email / email_verified here if needed.)
-      window.location.href = "https://bite-n-go.netlify.app/vendors";
+  // Google Auth Function
+  async function handleGoogleAuth() {
+    try {
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+      console.log("User signed in:", user);
+      alert(`Welcome ${user.displayName}`);
+
+      // Close modals after sign in
+      document.getElementById("loginModal").style.display = "none";
+      document.getElementById("signupModal").style.display = "none";
+
+      // Redirect after login/signup
+      window.location.href = "vendor.html";
+    } catch (error) {
+      console.error("Auth error:", error);
+      alert(error.message);
     }
+  }
 
-    // Initialize after library loads
-    window.addEventListener('load', () => {
-      if (window.google && google.accounts && google.accounts.id) {
-        google.accounts.id.initialize({
-          client_id: GOOGLE_CLIENT_ID,
-          callback: handleCredentialResponse,
-        });
-
-        // Attach click to both .btn-google buttons (login and signup)
-        document.querySelectorAll('.btn-google').forEach(btn => {
-          btn.addEventListener('click', (e) => {
-            e.preventDefault();
-            // Show the account chooser / One Tap prompt (this triggers Google UI)
-            // If you prefer a direct popup, you may use OAuth code flow on server.
-            google.accounts.id.prompt();
-          });
-        });
-      } else {
-        console.error('Google Identity Services not available.');
-      }
+  // Attach click handler to ALL Google buttons
+  document.querySelectorAll(".btn-google").forEach((btn) => {
+    btn.addEventListener("click", (e) => {
+      e.preventDefault();
+      handleGoogleAuth();
     });
-  </script>
+  });
+</script>
+
 </body>
 </html>

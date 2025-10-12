@@ -1,0 +1,135 @@
+/* dashboard.css — LARGE stylesheet with many transitions & effects */
+/* Colors: orange primary, green accents (separate) */
+:root{
+  --bg: #fffdf8;
+  --card: #ffffff;
+  --muted: #6b6b6b;
+  --accent-orange: #ff6a00;
+  --accent-green: #27ae60;
+  --shadow: rgba(10,10,10,0.06);
+  --radius: 16px;
+  --max-width: 1100px;
+  --ease: cubic-bezier(.2,.9,.2,1);
+}
+
+/* Reset */
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;font-family: "Poppins", Inter, system-ui, Arial, sans-serif;background:var(--bg);color:#111}
+img{max-width:100%;display:block}
+
+/* Page root centers everything */
+.page-root{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:36px}
+
+/* Container (card-like) */
+.dash-container{
+  width:min(var(--max-width),95%);
+  background:var(--card);
+  border-radius:20px;
+  padding:28px;
+  box-shadow:0 24px 60px var(--shadow);
+  overflow:hidden;
+  border: 1px solid rgba(0,0,0,0.03);
+}
+
+/* HERO / WELCOME */
+.hero{display:flex;flex-direction:column;align-items:center;text-align:center;padding:18px 8px}
+.welcome{font-size:clamp(28px,4.5vw,56px);line-height:1.02;font-weight:800;letter-spacing:-0.02em;color:#111}
+.welcome .name{color:var(--accent-green);font-weight:900}
+.welcome .big-em{color:var(--accent-orange);font-weight:900}
+.quote{margin-top:10px;color:var(--muted);font-size:1.05rem;font-style:italic;text-decoration:underline}
+.delivery{margin-top:14px;padding:12px 18px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.9), rgba(255,255,255,0.98));border:1px solid rgba(0,0,0,0.04);box-shadow:0 8px 24px rgba(15,15,15,0.03)}
+.deliver-label{font-size:0.88rem;color:var(--muted)}
+.deliver-address{font-weight:700;margin-top:6px;font-size:1rem;color:#222}
+
+/* Cards shared style */
+.card{background:var(--card);border-radius:var(--radius);padding:18px;margin:18px 0;box-shadow:0 10px 30px var(--shadow);transition:transform 260ms var(--ease), box-shadow 260ms var(--ease)}
+.card:hover{transform:translateY(-10px);box-shadow:0 28px 70px rgba(10,10,10,0.12)}
+
+/* Titles */
+.card h2{font-size:1.2rem;margin-bottom:12px;color:#111}
+
+/* Status grid rows */
+.status-grid{display:grid;grid-template-columns:repeat(2,minmax(220px,1fr));gap:12px}
+.status-row{padding:12px;border-radius:10px;background:linear-gradient(180deg,#fff,#fff);border:1px solid rgba(0,0,0,0.04);display:flex;justify-content:space-between;align-items:center}
+.field-label{color:var(--muted);font-size:0.95rem}
+.field-value{font-weight:700;font-size:1.02rem}
+.highlight{color:var(--accent-orange);font-weight:800}
+
+/* Today's grid */
+.today-grid{display:grid;grid-template-columns:repeat(2,minmax(220px,1fr));gap:12px}
+.today-item{padding:14px;border-radius:10px;background:linear-gradient(180deg,#fff,#fff);border:1px solid rgba(0,0,0,0.04)}
+.today-item .label{color:var(--muted);font-size:0.9rem;margin-bottom:6px}
+.today-item .value{font-weight:700}
+
+/* Menu card */
+.menu-wrap{display:flex;justify-content:center;align-items:center;padding:8px}
+#menuImage{width:90vw;height:80vh;max-width:1280px;object-fit:cover;border-radius:12px;border:1px solid rgba(0,0,0,0.05);box-shadow:0 18px 48px rgba(10,10,10,0.06)}
+
+/* Actions row */
+.actions-row{display:flex;gap:12px;flex-wrap:wrap;align-items:center;justify-content:center;margin-top:8px}
+.btn{display:inline-flex;align-items:center;justify-content:center;padding:12px 18px;border-radius:12px;border:0;cursor:pointer;transition:transform 200ms var(--ease), box-shadow 200ms var(--ease), opacity 200ms var(--ease);font-weight:700}
+.btn:focus{outline:3px solid rgba(0,0,0,0.06);outline-offset:3px}
+.btn-primary{background:var(--accent-orange);color:#fff;box-shadow:0 12px 30px rgba(255,106,0,0.12)}
+.btn-primary:hover{transform:translateY(-6px);box-shadow:0 28px 70px rgba(255,106,0,0.12)}
+.btn-outline{background:transparent;color:#111;border:2px solid rgba(0,0,0,0.06)}
+.btn-outline:hover{transform:translateY(-6px);box-shadow:0 18px 40px rgba(0,0,0,0.06)}
+.btn-ghost{background:transparent;color:var(--accent-green);border:2px dashed rgba(39,174,96,0.12)}
+.btn-ghost:hover{transform:translateY(-6px);box-shadow:0 18px 40px rgba(39,174,96,0.06)}
+
+/* small text + muted paragraph */
+.small-muted{color:var(--muted);font-size:0.9rem;margin-top:10px;text-align:center}
+
+/* Toasts */
+.toast-holder{position:fixed;right:18px;bottom:18px;display:flex;flex-direction:column;gap:8px;z-index:2000}
+.toast{background:#f0fff6;padding:10px 14px;border-radius:10px;box-shadow:0 8px 20px rgba(10,10,10,0.06);transition:opacity 300ms}
+.toast.err{background:#fff4f4}
+
+/* Reveal animation */
+.reveal{opacity:0;transform:translateY(26px);transition:all 700ms var(--ease)}
+.reveal.visible{opacity:1;transform:translateY(0)}
+
+/* Responsive */
+@media (max-width:900px){
+  .status-grid{grid-template-columns:1fr}
+  .today-grid{grid-template-columns:1fr}
+  #menuImage{width:92vw;height:60vh}
+  .welcome{font-size:clamp(24px,6vw,40px)}
+  .dash-container{padding:18px}
+}
+@media (max-width:520px){
+  .welcome{font-size:22px}
+  .card{padding:14px}
+  .btn{padding:10px 12px;font-size:14px}
+  #menuImage{height:50vh}
+}
+
+/* small interactions: focus/hover micro animations */
+.status-row:hover{transform:translateY(-6px);box-shadow:0 18px 40px rgba(10,10,10,0.06)}
+.today-item:hover{transform:translateY(-6px);box-shadow:0 18px 40px rgba(10,10,10,0.06)}
+.menu-wrap:hover img{transform:scale(1.01);filter:brightness(1.02);transition:transform 420ms var(--ease), filter 420ms var(--ease)}
+.actions-card:hover .action-btn{transform:translateY(-6px)}
+
+/* subtle decorative corner shapes (food related) */
+.dash-container::before,
+.dash-container::after{
+  content:"";
+  position:absolute;
+  pointer-events:none;
+  opacity:0.04;
+  filter:blur(10px);
+}
+.dash-container::before{
+  width:220px;height:220px;background:url('data:image/svg+xml;utf8,\
+    <svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\">\
+    <circle cx=\"50\" cy=\"50\" r=\"50\" fill=\"%2327ae60\"/></svg>') no-repeat left top;
+  left:20px;top:20px;border-radius:50%;
+}
+.dash-container::after{
+  width:180px;height:180px;background:url('data:image/svg+xml;utf8,\
+    <svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\">\
+    <rect width=\"100\" height=\"100\" rx=\"16\" fill=\"%23ff6a00\"/></svg>') no-repeat right bottom;
+  right:20px;bottom:20px;border-radius:14px;
+  opacity:0.035;
+}
+
+/* end of stylesheet */

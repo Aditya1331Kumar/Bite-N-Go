@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Dashboard — Raj Catering</title>
+  <link rel="stylesheet" href="dashd.css" />
+</head>
+<body>
+  <main class="page-root">
+
+    <!-- CENTER BOX: nothing outside should be distracting -->
+    <section class="dash-container" aria-labelledby="welcomeHeading">
+
+      <!-- Section 1: Welcome + Quote + Address -->
+      <header class="hero reveal" id="hero">
+        <h1 id="welcomeHeading" class="welcome">
+          Welcome <span class="name">Ayush</span> — <span class="big-em">eat</span> and <span class="big-em">live healthy</span>
+        </h1>
+
+        <p class="quote"><em><u>Good food is the foundation of genuine happiness.</u></em></p>
+
+        <div class="delivery">
+          <div class="deliver-label">Delivering here:</div>
+          <div class="deliver-address" id="deliverAddress">B-Block, Hostel 3, College Road, Cityname</div>
+        </div>
+      </header>
+
+      <!-- Section 2: Current Status -->
+      <section class="card status-card reveal" aria-labelledby="statusTitle">
+        <h2 id="statusTitle">Current status</h2>
+
+        <div class="status-grid">
+          <div class="status-row">
+            <div class="field-label">Current plan</div>
+            <div class="field-value" id="currentPlan">Raj Catering</div>
+          </div>
+
+          <div class="status-row">
+            <div class="field-label">Current plan price</div>
+            <div class="field-value" id="currentPrice">₹2000</div>
+          </div>
+
+          <div class="status-row">
+            <div class="field-label">Current plan days</div>
+            <div class="field-value" id="currentDays">30 days</div>
+          </div>
+
+          <div class="status-row">
+            <div class="field-label">Left days (excluding today)</div>
+            <div class="field-value highlight" id="leftDays">26 days</div>
+          </div>
+          <div class="status-row">
+            <div class="field-label">Started On </div>
+            <div class="field-value highlight" id="leftDays">12 Nov 2025</div>
+          </div>
+
+          <div class="status-row">
+            <div class="field-label">Renewal date</div>
+            <div class="field-value" id="renewalDate">12 Nov 2025</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 3: Today's section -->
+      <section class="card today-card reveal" aria-labelledby="todayTitle">
+        <h2 id="todayTitle">Today's details</h2>
+
+        <div class="today-grid">
+          <div class="today-item">
+            <div class="label">Afternoon meal</div>
+            <div class="value" id="afternoonMeal">Paneer Butter Masala + Roti</div>
+          </div>
+
+          <div class="today-item">
+            <div class="label">Dinner meal</div>
+            <div class="value" id="dinnerMeal">Dal Tadka + Jeera Rice</div>
+          </div>
+
+          <div class="today-item">
+            <div class="label">Delivery boy name</div>
+            <div class="value" id="delBoy">Raju</div>
+          </div>
+
+          <div class="today-item">
+            <div class="label">Delivery boy number</div>
+            <div class="value" id="delNumber">+91 88094 99019</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 4: Menu Image -->
+      <section class="card menu-card reveal" aria-labelledby="menuTitle">
+        <h2 id="menuTitle">Menu</h2>
+        <div class="menu-wrap">
+          <img src="images/two.jpg" alt="Menu image" id="menuImage" />
+        </div>
+      </section>
+
+      <!-- Section 5: Quick actions -->
+      <section class="card actions-card reveal" aria-labelledby="actionsTitle">
+        <h2 id="actionsTitle">Quick actions</h2>
+
+        <div class="actions-row">
+          <button id="reportIssue" class="btn btn-outline action-btn">Report an issue</button>
+          <a class="btn btn-primary action-btn" href="tel:+918809499019">Call 8809499019</a>
+          <a class="btn btn-ghost action-btn" href="vendor.html">See new plans</a>
+        </div>
+
+        <p class="small-muted">Primary colors: Orange (buttons) and Green (accents). Hover for effects.</p>
+      </section>
+
+    </section>
+  </main>
+
+  <!-- small toast container -->
+  <div id="toastHolder" class="toast-holder" aria-live="polite"></div>
+
+  <!-- SCRIPTS: reveal on scroll + report to WhatsApp behavior -->
+  <script>
+    // reveal-on-scroll
+    (function(){
+      const reveals = document.querySelectorAll('.reveal');
+      function onScroll() {
+        const h = window.innerHeight;
+        reveals.forEach(el => {
+          const r = el.getBoundingClientRect().top;
+          if (r < h - 80) el.classList.add('visible');
+        });
+      }
+      window.addEventListener('scroll', onScroll);
+      window.addEventListener('load', onScroll);
+    })();
+
+    // Toast helper
+    function toast(msg, isError=false, ttl=3500){
+      const holder = document.getElementById('toastHolder');
+      const el = document.createElement('div');
+      el.className = 'toast' + (isError ? ' err' : '');
+      el.textContent = msg;
+      holder.appendChild(el);
+      setTimeout(()=> el.style.opacity = '0', ttl - 300);
+      setTimeout(()=> el.remove(), ttl);
+    }
+
+    // Report an issue -> open WhatsApp to your number with a prefilled message
+    (function(){
+      const reportBtn = document.getElementById('reportIssue');
+      const phone = '918809499019'; // +91 88094 99019
+      reportBtn.addEventListener('click', () => {
+        const pre = encodeURIComponent("Hi, I want to report an issue with my tiffin order. My name: , Email: , Details: ");
+        const url = `https://wa.me/${phone}?text=${pre}`;
+        // open in new tab
+        window.open(url, '_blank');
+        toast('Opening WhatsApp...', false, 2000);
+      });
+    })();
+
+    // small accessibility: keyboard focus styles for action buttons
+    document.querySelectorAll('.action-btn').forEach(b=>{
+      b.addEventListener('keydown', (e)=> {
+        if(e.key === 'Enter' || e.key === ' ') b.click();
+      });
+    });
+  </script>
+</body>
+</html>

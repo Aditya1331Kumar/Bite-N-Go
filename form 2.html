@@ -152,7 +152,7 @@
       <button id="closeQr" class="close-x" aria-label="Close">&times;</button>
       <h3>Scan this QR to pay</h3>
       <div class="qr-wrap">
-        <img src="qr.png" alt="Payment QR" id="qrImage" />
+        <img src="qr.jpg" alt="Payment QR" id="qrImage" />
       </div>
       <p class="qr-note">Scan using any UPI app and pay the displayed amount. After payment, upload proof (optional) in admin panel.</p>
       <div class="overlay-actions">
@@ -166,7 +166,7 @@
   <div id="toastHolder" aria-live="polite" class="toast-holder"></div>
 
   <!-- FIREBASE + APP SCRIPT -->
-  <script type="module">
+  <!-- <script type="module">
     // ---------------------------
     // Firebase imports (v12)
     // ---------------------------
@@ -208,6 +208,7 @@
 
     // UPI ID provided by you
     const MERCHANT_UPI = "aditya133131@axl";
+    const MERCHANT_UPI_G = "aditya.133131.kumar@oksbi";
     const SUPPORT_PHONE = "+919876543210";
 
     // Utility: toast
@@ -263,7 +264,7 @@
         const upiUri = `upi://pay?pa=${encodeURIComponent(MERCHANT_UPI)}&pn=${encodeURIComponent('Raj Catering')}&am=${encodeURIComponent(price)}&cu=INR&tn=${encodeURIComponent('Raj Catering order')}`;
 
         // For Google Pay, an intent / web link can be used:
-        const gpayIntent = `https://pay.google.com/gp/p/ui/pay?pa=${encodeURIComponent(MERCHANT_UPI)}&pn=${encodeURIComponent('Raj Catering')}&am=${encodeURIComponent(price)}&cu=INR&tn=${encodeURIComponent('Raj Catering order')}`;
+        const gpayIntent = `https://pay.google.com/gp/p/ui/pay?pa=${encodeURIComponent(MERCHANT_UPI_G)}&pn=${encodeURIComponent('Raj Catering')}&am=${encodeURIComponent(price)}&cu=INR&tn=${encodeURIComponent('Raj Catering order')}`;
 
         // Open appropriate link
         if(payMethod === 'gpay'){
@@ -394,6 +395,209 @@
       });
     });
 
-  </script>
+  </script> -->
+
+
+  <script type="module">
+  // ---------------------------
+  // Firebase imports (v12)
+  // ---------------------------
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
+  import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-firestore.js";
+
+  // ---------------------------
+  // Firebase Config
+  // ---------------------------
+  const firebaseConfig = {
+    apiKey: "AIzaSyDh5N6JTHYU0qjodJNUF7Yo76G5tt8AcX0",
+    authDomain: "bite-n-go.firebaseapp.com",
+    projectId: "bite-n-go",
+    storageBucket: "bite-n-go.firebasestorage.app",
+    messagingSenderId: "892092521856",
+    appId: "1:892092521856:web:1adb53b64a08d1270b7565",
+    measurementId: "G-EF3ZM1CZFW"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  // ---------------------------
+  // DOM references
+  // ---------------------------
+  const orderForm = document.getElementById('orderForm');
+  const selectedPlanEl = document.getElementById('selectedPlan');
+  const selectedPriceEl = document.getElementById('selectedPrice');
+  const totalPayEl = document.getElementById('totalPay');
+  const payNowBtn = document.getElementById('payNow');
+  const saveOrderBtn = document.getElementById('saveOrder');
+  const qrModal = document.getElementById('qrModal');
+  const closeQr = document.getElementById('closeQr');
+  const copyUpiBtn = document.getElementById('copyUpi');
+  const openUpiApp = document.getElementById('openUpiApp');
+  const toastHolder = document.getElementById('toastHolder');
+  const callSupport = document.getElementById('callSupport');
+
+  // ---------------------------
+  // Constants
+  // ---------------------------
+  const PHONEPE_UPI = "aditya133131@axl";
+  const GPAY_UPI = "aditya.133131.kumar@oksbi";
+  const SUPPORT_PHONE = "+919876543210";
+
+  // ---------------------------
+  // Toast Utility
+  // ---------------------------
+  function toast(msg, isError = false, ttl = 3500) {
+    const el = document.createElement('div');
+    el.className = 'toast' + (isError ? ' err' : ' ok');
+    el.textContent = msg;
+    toastHolder.appendChild(el);
+    setTimeout(() => el.style.opacity = '0', ttl - 300);
+    setTimeout(() => el.remove(), ttl);
+  }
+
+  // ---------------------------
+  // Update Selected Plan Summary
+  // ---------------------------
+  function updatePlanSummary() {
+    const planRadio = document.querySelector('input[name="plan"]:checked');
+    const price = parseInt(planRadio.dataset.price, 10);
+    const days = planRadio.value;
+    selectedPlanEl.textContent = days == 30 ? '1 month' : days + ' days';
+    selectedPriceEl.textContent = '₹' + price;
+    totalPayEl.textContent = '₹' + price;
+  }
+  updatePlanSummary();
+  document.querySelectorAll('input[name="plan"]').forEach(r => {
+    r.addEventListener('change', updatePlanSummary);
+  });
+
+  // ---------------------------
+  // QR Modal Functions
+  // ---------------------------
+  function openQrModal() {
+    qrModal.style.display = 'flex';
+    qrModal.setAttribute('aria-hidden', 'false');
+  }
+  function closeQrModal() {
+    qrModal.style.display = 'none';
+    qrModal.setAttribute('aria-hidden', 'true');
+  }
+  closeQr.addEventListener('click', closeQrModal);
+  qrModal.addEventListener('click', (e) => {
+    if (e.target === qrModal) closeQrModal();
+  });
+
+  // ---------------------------
+  // QR Modal Actions
+  // ---------------------------
+  function setUpQrActions(amount) {
+    copyUpiBtn.onclick = () => {
+      navigator.clipboard.writeText(PHONEPE_UPI).then(() => {
+        toast('UPI ID copied to clipboard');
+      }).catch(() => {
+        toast('Could not copy to clipboard', true);
+      });
+    };
+
+    openUpiApp.onclick = (ev) => {
+      ev.preventDefault();
+      const upiLink = `upi://pay?pa=${encodeURIComponent(PHONEPE_UPI)}&pn=${encodeURIComponent('Raj Catering')}&am=${encodeURIComponent(amount)}&cu=INR&tn=${encodeURIComponent('Raj Catering order')}`;
+      window.open(upiLink, '_blank');
+    };
+  }
+
+  // ---------------------------
+  // PAY NOW BUTTON
+  // ---------------------------
+  payNowBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    const planRadio = document.querySelector('input[name="plan"]:checked');
+    const price = parseInt(planRadio.dataset.price, 10);
+    const payMethod = document.querySelector('input[name="payment"]:checked').value;
+
+    if (payMethod === 'qr') {
+      openQrModal();
+      setUpQrActions(price);
+    } else if (payMethod === 'phonepe') {
+      const upiUri = `upi://pay?pa=${encodeURIComponent(PHONEPE_UPI)}&pn=${encodeURIComponent('Raj Catering')}&am=${encodeURIComponent(price)}&cu=INR&tn=${encodeURIComponent('Raj Catering order')}`;
+      window.open(upiUri, '_blank');
+    } else if (payMethod === 'gpay') {
+      const gpayUri = `upi://pay?pa=${encodeURIComponent(GPAY_UPI)}&pn=${encodeURIComponent('Raj Catering')}&am=${encodeURIComponent(price)}&cu=INR&tn=${encodeURIComponent('Raj Catering order')}`;
+      window.open(gpayUri, '_blank');
+    }
+  });
+
+  // ---------------------------
+  // CALL SUPPORT
+  // ---------------------------
+  callSupport.addEventListener('click', () => {
+    window.location.href = 'tel:' + SUPPORT_PHONE;
+  });
+
+  // ---------------------------
+  // SAVE ORDER TO FIRESTORE
+  // ---------------------------
+  orderForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    saveOrderBtn.disabled = true;
+    saveOrderBtn.textContent = 'Saving...';
+
+    const fullName = document.getElementById('fullName').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const phone = document.getElementById('phone').value.trim();
+    const address = document.getElementById('address').value.trim();
+    const refPoint = document.getElementById('refPoint').value.trim();
+    const vendor = document.getElementById('vendor').value;
+    const planRadio = document.querySelector('input[name="plan"]:checked');
+    const days = planRadio.value;
+    const price = parseInt(planRadio.dataset.price, 10);
+    const paymentMethod = document.querySelector('input[name="payment"]:checked').value;
+
+    if (!fullName || !email || !phone || !address) {
+      toast('Please fill required fields', true);
+      saveOrderBtn.disabled = false;
+      saveOrderBtn.textContent = 'Save & Continue';
+      return;
+    }
+
+    const orderObj = {
+      fullName,
+      email,
+      phone,
+      address,
+      refPoint,
+      vendor,
+      days: parseInt(days, 10),
+      price,
+      paymentMethod,
+      isPaid: false,
+      createdAt: serverTimestamp()
+    };
+
+    try {
+      await addDoc(collection(db, 'orders'), orderObj);
+      toast('Order saved! Redirecting...', false, 2000);
+      setTimeout(() => {
+        window.location.href = 'waiting.html';
+      }, 900);
+    } catch (err) {
+      console.error('Save error', err);
+      toast('Failed to save order: ' + (err.message || ''), true, 5000);
+      saveOrderBtn.disabled = false;
+      saveOrderBtn.textContent = 'Save & Continue';
+    }
+  });
+
+  // ---------------------------
+  // INIT
+  // ---------------------------
+  document.addEventListener('DOMContentLoaded', () => {
+    updatePlanSummary();
+    setUpQrActions(parseInt(document.querySelector('input[name="plan"]:checked').dataset.price, 10));
+  });
+</script>
+
 </body>
 </html>

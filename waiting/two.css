@@ -1,0 +1,315 @@
+/* style.css - Large, detailed styles for Raj Catering page
+   - Full-page background image (background.png)
+   - Big menu image fixed size (~75vw x 75vh)
+   - Feature cards + hover effects
+   - Review cards (Amazon-like) + hover effects
+   - Big Buy Now button
+   - Modal form styles
+   - Toasts, animations, responsive layout
+*/
+
+/* -------------------------------------------
+   Variables & base
+   ------------------------------------------- */
+:root{
+  --bg-img: url('background.jpg');
+  --page-max: 1200px;
+  --green: #27ae60;          /* primary green */
+  --orange: #ff7a00;         /* accent orange (separate, not mixed) */
+  --muted: #6b7280;
+  --surface: #ffffff;
+  --glass: rgba(255,255,255,0.7);
+  --radius-lg: 18px;
+  --radius-md: 12px;
+  --radius-sm: 8px;
+  --shadow-1: 0 8px 30px rgba(12,18,30,0.08);
+  --shadow-2: 0 26px 80px rgba(12,18,30,0.10);
+  --trans: 260ms cubic-bezier(.2,.9,.2,1);
+}
+
+/* Reset */
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  color:#071023;
+  background-image: var(--bg-img);
+  background-size: cover;
+  background-position: center center;
+  background-attachment: fixed;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  line-height:1.45;
+}
+
+/* Overlay so content readable over background */
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  background: linear-gradient(180deg, rgba(255,255,255,0.75), rgba(255,255,255,0.85));
+  pointer-events:none;
+  z-index:0;
+}
+
+/* page container */
+.page{
+  position:relative;
+  z-index:1;
+  max-width: var(--page-max);
+  margin: 36px auto 80px;
+  padding: 28px;
+  background: rgba(255,255,255,0.6);
+  border-radius: 20px;
+  box-shadow: var(--shadow-2);
+  backdrop-filter: blur(6px);
+}
+
+/* Hero */
+.hero{
+  text-align:center;
+  margin-bottom: 18px;
+}
+.vendor-title{
+  font-size: clamp(32px, 5.2vw, 64px);
+  margin: 6px 0 8px;
+  font-weight: 900;
+  letter-spacing: -1px;
+  color: var(--green);
+  text-transform: capitalize;
+  text-shadow: 0 6px 18px rgba(39,174,96,0.08);
+}
+.vendor-quote{
+  color: var(--muted);
+  font-style: italic;
+  margin: 0 auto 18px;
+  max-width: 900px;
+  padding-left: 12px;
+  border-left: 4px solid rgba(39,174,96,0.12);
+}
+
+/* Menu image block - large fixed size */
+.menu-wrap{
+  display:flex;
+  justify-content:center;
+  margin: 18px 0 26px;
+}
+#menuImage{
+  width: 75vw;              /* requested fixed-ish size */
+  height: 75vh;
+  max-width: 1100px;
+  max-height: 900px;
+  object-fit: cover;
+  border-radius: 20px;
+  box-shadow: var(--shadow-2);
+  border: 1px solid rgba(10,10,10,0.04);
+  transition: transform var(--trans), filter var(--trans), box-shadow var(--trans);
+}
+#menuImage:hover{
+  transform: translateY(-10px) scale(1.02);
+  filter: saturate(1.06) contrast(1.02);
+  box-shadow: 0 40px 120px rgba(12,18,30,0.16);
+}
+
+/* Features grid */
+.features{
+  display:flex;
+  gap:18px;
+  justify-content:center;
+  align-items:stretch;
+  flex-wrap:wrap;
+  margin-top: 8px;
+  margin-bottom: 28px;
+  padding: 6px;
+}
+.feature-card{
+  background: var(--surface);
+  width: 220px;
+  min-height: 140px;
+  border-radius: 14px;
+  padding: 16px;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  align-items:flex-start;
+  box-shadow: var(--shadow-1);
+  border:1px solid rgba(10,10,10,0.03);
+  transition: transform var(--trans), box-shadow var(--trans), border-color var(--trans);
+  cursor: pointer;
+}
+.feature-card .feat-emoji{
+  font-size:26px;
+  width:46px;height:46px;border-radius:10px;display:flex;align-items:center;justify-content:center;
+  background: linear-gradient(180deg, rgba(0,0,0,0.03), rgba(0,0,0,0.01));
+  box-shadow: 0 8px 20px rgba(10,10,10,0.04);
+}
+.feature-card .feat-title{ font-weight:800; color: var(--green); font-size:1rem; }
+.feature-card .feat-desc{ color:var(--muted); font-size:0.95rem; margin-top:4px; }
+
+/* Hover effects for feature cards (prominent) */
+.feature-card:hover{
+  transform: translateY(-12px) scale(1.02);
+  box-shadow: 0 40px 100px rgba(12,18,30,0.18);
+  border-color: rgba(39,174,96,0.12);
+}
+.feature-card.hovered{ transform: translateY(-14px) scale(1.03); }
+
+/* Special styling for price card to use orange accent (distinct) */
+.feature-card[data-feature="price"] .feat-title { color: var(--orange); }
+.feature-card[data-feature="price"] { border-color: rgba(255,122,0,0.06); }
+
+/* Reviews area */
+.reviews{
+  margin-top: 18px;
+  padding: 12px 6px;
+}
+.reviews-heading{
+  font-size:1.4rem; margin: 6px 0 12px; font-weight:900; color: #0b1320;
+}
+.reviews-grid{
+  display:grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap:18px;
+}
+
+/* Individual review cards (Amazon-like) */
+.review{
+  background: linear-gradient(180deg, #fff, #fbfffc);
+  border-radius: 14px;
+  padding: 16px;
+  box-shadow: var(--shadow-1);
+  border: 1px solid rgba(10,10,10,0.03);
+  transition: transform var(--trans), box-shadow var(--trans), border-color var(--trans);
+  display:flex; flex-direction:column; gap:10px;
+}
+.review:hover{
+  transform: translateY(-14px);
+  box-shadow: 0 40px 120px rgba(10,10,10,0.12);
+  border-color: rgba(39,174,96,0.10);
+}
+.review-top{ display:flex; align-items:center; gap:12px; justify-content:space-between; }
+.avatar{
+  width:56px;height:56px;border-radius:12px;display:inline-flex;align-items:center;justify-content:center;font-weight:800;color:#fff;
+  background: linear-gradient(90deg,#3b82f6,#06b6d4);
+  box-shadow: 0 10px 30px rgba(11,128,203,0.12);
+  flex-shrink:0;
+}
+.meta{ flex:1; display:flex; flex-direction:column; gap:2px; text-align:left; }
+.name{ font-weight:800; color:#0b1320; }
+.stars{ color:#f59e0b; font-weight:800; letter-spacing:1px; }
+.date{ font-size:0.82rem; color:var(--muted); }
+
+/* review body */
+.review-text{ color:var(--muted); font-size:0.96rem; }
+
+/* review actions */
+.review-actions{ display:flex; gap:8px; margin-top:auto; }
+.review-actions button{
+  border:1px solid rgba(10,10,10,0.06);
+  background:#fff;padding:8px 10px;border-radius:10px;cursor:pointer;font-weight:700;
+  transition: transform var(--trans), box-shadow var(--trans);
+}
+.review-actions button:hover{ transform: translateY(-4px); box-shadow: var(--shadow-1); }
+.review-actions .helpful{ color: var(--green); border-color: rgba(39,174,96,0.08); }
+.review-actions .report{ color: var(--orange); border-color: rgba(255,122,0,0.08); }
+
+/* CTA Buy Now - larger as requested */
+.cta{ display:flex; justify-content:center; margin:28px 0 12px; }
+.buy-btn{
+  background: var(--green);
+  color:#fff;
+  border:none;
+  padding:18px 36px;
+  font-size:1.2rem;
+  font-weight:900;
+  border-radius:18px;
+  box-shadow: 0 20px 60px rgba(39,174,96,0.18);
+  cursor:pointer;
+  transition: transform var(--trans), box-shadow var(--trans), filter var(--trans);
+}
+.buy-btn:hover{
+  transform: translateY(-10px) scale(1.02);
+  box-shadow: 0 40px 100px rgba(39,174,96,0.26);
+  filter: saturate(1.05);
+}
+
+/* Modal overlay + content */
+.modal{
+  display:none;
+  position:fixed;
+  inset:0;
+  background: rgba(6,10,18,0.5);
+  align-items:center; justify-content:center;
+  z-index:2000;
+  padding: 20px;
+}
+.modal-content{
+  width:100%;
+  max-width:700px;
+  background: #fff;
+  border-radius: 16px;
+  padding: 22px;
+  box-shadow: 0 40px 120px rgba(8,12,20,0.36);
+  transform: translateY(12px);
+  transition: transform var(--trans), opacity var(--trans);
+  position:relative;
+}
+.modal-close{
+  position:absolute; right:14px; top:12px; border:0; background:transparent; cursor:pointer; font-size:18px;
+}
+
+/* Form styles inside modal */
+.order-form{ display:flex; flex-direction:column; gap:12px; margin-top:6px; }
+.order-form label{ display:flex; flex-direction:column; gap:6px; font-weight:700; color:#374151; font-size:0.95rem; }
+.order-form input[type="text"], .order-form input[type="email"], .order-form input[type="file"]{
+  padding:12px; border-radius:10px; border:1px solid rgba(10,10,10,0.06); background:#fff;
+  transition: box-shadow var(--trans), border-color var(--trans);
+}
+.order-form input:focus{ outline:none; border-color: var(--green); box-shadow: 0 10px 30px rgba(39,174,96,0.08); }
+
+.checkbox{ display:flex; align-items:center; gap:10px; font-weight:700; color:var(--muted); }
+
+/* form actions */
+.form-actions{ display:flex; gap:12px; justify-content:flex-end; margin-top:6px; }
+.btn.cancel{ background:#fff; border:1px solid rgba(10,10,10,0.06); padding:10px 14px; border-radius:10px; cursor:pointer; }
+.btn.submit{ background: var(--orange); color:#fff; padding:10px 14px; border-radius:10px; font-weight:800; cursor:pointer; }
+.btn.cancel:hover{ transform: translateY(-4px); box-shadow: var(--shadow-1); }
+.btn.submit:hover{ transform: translateY(-6px); box-shadow: 0 28px 80px rgba(255,122,0,0.18); }
+
+/* modal note */
+.modal-note{ font-size:0.9rem; color:var(--muted); margin-top:10px; }
+
+/* Toasts */
+.toast-wrap{ position: fixed; right: 18px; bottom: 18px; z-index:2600; display:flex; flex-direction:column; gap:10px; }
+.toast{ background:#fff; padding:10px 12px; border-radius:10px; box-shadow: var(--shadow-1); font-weight:700; transition: opacity var(--trans); }
+.toast.err{ border-left: 4px solid #f87171; }
+.toast.ok{ border-left: 4px solid var(--green); }
+
+/* Animations */
+@keyframes floatUp { from{opacity:0; transform: translateY(12px);} to{opacity:1; transform:none;} }
+.vendor-title, .feature-card, .review, #menuImage, .buy-btn{ animation: floatUp 380ms ease both; }
+
+/* Responsive */
+@media (max-width:1100px){
+  .reviews-grid{ grid-template-columns: repeat(2, 1fr); }
+  #menuImage{ width:86vw; height:60vh; }
+  .feature-card{ width: 200px; }
+}
+@media (max-width:720px){
+  .page{ margin: 18px auto; padding: 16px; border-radius:14px; }
+  .reviews-grid{ grid-template-columns: 1fr; gap:12px; }
+  #menuImage{ width:92vw; height:52vh; border-radius:12px; }
+  .feature-card{ width: 46%; min-width:140px; }
+  .features{ gap:10px; }
+  .buy-btn{ width:90%; padding:16px; font-size:1.1rem; }
+}
+@media (max-width:420px){
+  #menuImage{ width:100vw; height:48vh; border-radius:10px; }
+  .feature-card{ width:100%; display:flex; flex-direction:row; align-items:center; gap:12px; padding:12px; }
+  .feature-card .feat-desc{ display:none; }
+  .vendor-title{ font-size:1.6rem; }
+}
+
+/* Accessibility focus */
+button:focus, input:focus{ outline:none; box-shadow: 0 8px 26px rgba(39,174,96,0.12); border-color:var(--green); }

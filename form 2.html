@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Order Form — Raj Catering</title>
+  <link rel="stylesheet" href="form.css" />
+</head>
+<body>
+
+  <!-- Only visible box (nothing outside the box should show) -->
+  <main class="page-root" aria-labelledby="formTitle">
+    <section class="form-box" role="region" aria-label="Order form for Raj Catering" tabindex="0">
+      <header class="box-header">
+        <h1 id="formTitle">Raj Catering — Order Form</h1>
+        <p class="lead">Fill your details below to place the order. Choose days & payment option. We'll confirm soon.</p>
+      </header>
+
+      <form id="orderForm" class="order-form" autocomplete="on" novalidate>
+        <!-- Left column / inputs -->
+        <div class="form-grid">
+          <div class="field">
+            <label for="fullName">Full Name</label>
+            <input id="fullName" name="fullName" type="text" required placeholder="Your full name" />
+          </div>
+
+          <div class="field">
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" required placeholder="you@example.com" />
+          </div>
+
+          <div class="field">
+            <label for="phone">Phone Number</label>
+            <input id="phone" name="phone" type="tel" pattern="[0-9+\-\s]+" required placeholder="+91 98765 43210" />
+          </div>
+
+          <div class="field full">
+            <label for="address">Address</label>
+            <input id="address" name="address" type="text" required placeholder="Hostel / Room / Street" />
+          </div>
+
+          <div class="field">
+            <label for="refPoint">Reference point for address</label>
+            <input id="refPoint" name="refPoint" type="text" placeholder="Near the post office / landmark" />
+          </div>
+
+          <div class="field">
+            <label for="vendor">Vendor</label>
+            <select id="vendor" name="vendor" disabled>
+              <option value="Raj Catering" selected>Raj Catering</option>
+            </select>
+          </div>
+
+          <!-- Days & price selection -->
+          <fieldset class="field field-days">
+            <legend>No. of days & Price</legend>
+
+            <label class="radio">
+              <input type="radio" name="plan" value="15" data-price="1" checked />
+              <div>
+                <div class="plan-title">15 days</div>
+                <div class="plan-price">₹1</div>
+              </div>
+            </label>
+
+            <label class="radio">
+              <input type="radio" name="plan" value="21" data-price="2" />
+              <div>
+                <div class="plan-title">21 days</div>
+                <div class="plan-price">₹2</div>
+              </div>
+            </label>
+
+            <label class="radio">
+              <input type="radio" name="plan" value="30" data-price="3" />
+              <div>
+                <div class="plan-title">1 month</div>
+                <div class="plan-price">₹3</div>
+              </div>
+            </label>
+
+            <div class="selected-summary">
+              <div>Selected: <strong id="selectedPlan">15 days</strong></div>
+              <div>Total: <strong id="selectedPrice">₹1</strong></div>
+            </div>
+          </fieldset>
+
+          <!-- Payment options -->
+          <fieldset class="field field-pay">
+            <legend>Payment Option</legend>
+
+            <label class="pay-opt">
+              <input type="radio" name="payment" value="qr" checked />
+              <div>
+                <div class="pay-title">Show QR</div>
+                <div class="pay-desc">Open QR to scan (UPI)</div>
+              </div>
+            </label>
+
+            <label class="pay-opt">
+              <input type="radio" name="payment" value="phonepe" />
+              <div>
+                <div class="pay-title">PhonePe</div>
+                <div class="pay-desc">Open PhonePe with amount</div>
+              </div>
+            </label>
+
+            <label class="pay-opt">
+              <input type="radio" name="payment" value="gpay" />
+              <div>
+                <div class="pay-title">Google Pay</div>
+                <div class="pay-desc">Open Google Pay with amount</div>
+              </div>
+            </label>
+          </fieldset>
+        </div>
+
+         <footer class="box-footer">
+        <small>After submission your order will be saved and you'll be redirected to a waiting page. Admin will verify payment & set status.</small>
+      </footer>
+        <!-- Payment action row -->
+        <div class="actions-row">
+          <div class="left-actions">
+            <button type="button" id="callSupport" class="btn call">📞 Call for help</button>
+            <a class="tel-link" href="tel:+919876543210">+91 98765 43210</a>
+          </div>
+
+          <div class="right-actions">
+            <div class="price-display">
+              <div>Total pay (estimated)</div>
+              <div id="totalPay" class="big-price">₹2000</div>
+            </div>
+
+            <div class="pay-buttons">
+              <button type="button" id="payNow" class="btn primary">Proceed to Pay</button>
+              <button type="submit" id="saveOrder" class="btn outline">Save & Continue</button>
+            </div>
+          </div>
+        </div>
+      </form>
+
+      <!-- small help text -->
+      <footer class="box-footer">
+        <small>After submission your order will be saved and you'll be redirected to a waiting page. Admin will verify payment & set status.</small>
+      </footer>
+    </section>
+  </main>
+
+  <!-- QR Modal -->
+  <div id="qrModal" class="overlay" aria-hidden="true">
+    <div class="overlay-panel" role="dialog" aria-modal="true" aria-label="Payment QR">
+      <button id="closeQr" class="close-x" aria-label="Close">&times;</button>
+      <h3>Scan this QR to pay</h3>
+      <div class="qr-wrap">
+        <img src="qr.png" alt="Payment QR" id="qrImage" />
+      </div>
+      <p class="qr-note">Scan using any UPI app and pay the displayed amount. After payment, upload proof (optional) in admin panel.</p>
+      <div class="overlay-actions">
+        <button id="copyUpi" class="btn outline">Copy UPI ID</button>
+        <a id="openUpiApp" class="btn primary" href="#">Open UPI App</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- small toast container -->
+  <div id="toastHolder" aria-live="polite" class="toast-holder"></div>
+
+  <!-- FIREBASE + APP SCRIPT -->
+  <script type="module">
+    // ---------------------------
+    // Firebase imports (v12)
+    // ---------------------------
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
+    import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-firestore.js";
+
+    // ---------------------------
+    // Your Firebase config (provided earlier)
+    // ---------------------------
+    const firebaseConfig = {
+      apiKey: "AIzaSyDh5N6JTHYU0qjodJNUF7Yo76G5tt8AcX0",
+      authDomain: "bite-n-go.firebaseapp.com",
+      projectId: "bite-n-go",
+      storageBucket: "bite-n-go.firebasestorage.app",
+      messagingSenderId: "892092521856",
+      appId: "1:892092521856:web:1adb53b64a08d1270b7565",
+      measurementId: "G-EF3ZM1CZFW"
+    };
+
+    // initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // ---------------------------
+    // DOM refs
+    // ---------------------------
+    const orderForm = document.getElementById('orderForm');
+    const selectedPlanEl = document.getElementById('selectedPlan');
+    const selectedPriceEl = document.getElementById('selectedPrice');
+    const totalPayEl = document.getElementById('totalPay');
+    const payNowBtn = document.getElementById('payNow');
+    const saveOrderBtn = document.getElementById('saveOrder');
+    const qrModal = document.getElementById('qrModal');
+    const closeQr = document.getElementById('closeQr');
+    const copyUpiBtn = document.getElementById('copyUpi');
+    const openUpiApp = document.getElementById('openUpiApp');
+    const toastHolder = document.getElementById('toastHolder');
+    const callSupport = document.getElementById('callSupport');
+
+    // UPI ID provided by you
+    const MERCHANT_UPI = "aditya133131@axl";
+    const SUPPORT_PHONE = "+919876543210";
+
+    // Utility: toast
+    function toast(msg, isError=false, ttl=3500){
+      const el = document.createElement('div');
+      el.className = 'toast' + (isError? ' err' : ' ok');
+      el.textContent = msg;
+      toastHolder.appendChild(el);
+      setTimeout(()=> el.style.opacity = '0', ttl - 300);
+      setTimeout(()=> el.remove(), ttl);
+    }
+
+    // set default selected summary
+    function updatePlanSummary(){
+      const planRadio = document.querySelector('input[name="plan"]:checked');
+      const price = parseInt(planRadio.dataset.price, 10);
+      const days = planRadio.value;
+      selectedPlanEl.textContent = days == 30 ? '1 month' : days + ' days';
+      selectedPriceEl.textContent = '₹' + price;
+      totalPayEl.textContent = '₹' + price;
+    }
+    updatePlanSummary();
+
+    // listen to plan changes
+    document.querySelectorAll('input[name="plan"]').forEach(r => {
+      r.addEventListener('change', updatePlanSummary);
+    });
+
+    // Payment action - Pay Now: based on selected payment option
+    payNowBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const planRadio = document.querySelector('input[name="plan"]:checked');
+      const price = parseInt(planRadio.dataset.price, 10);
+      const payMethod = document.querySelector('input[name="payment"]:checked').value;
+
+      if(payMethod === 'qr'){
+        // show QR modal; user scans & pays manually
+        openQrModal();
+        // update QR modal actions to include amount
+        setUpQrActions(price);
+      } else {
+        // Construct UPI deeplink for quick opening for phonepe/gpay (works if device supports)
+        // NOTE: MERCHANT_UPI should be set (you provided aditya133131@axl)
+        if(!MERCHANT_UPI || MERCHANT_UPI === "YOUR_UPI_ID_HERE"){
+          // If not properly set, fallback to QR modal
+          toast('UPI ID not configured for direct deeplink. Showing QR instead.', true, 4500);
+          openQrModal();
+          setUpQrActions(price);
+          return;
+        }
+
+        // UPI URI (generic)
+        const upiUri = `upi://pay?pa=${encodeURIComponent(MERCHANT_UPI)}&pn=${encodeURIComponent('Raj Catering')}&am=${encodeURIComponent(price)}&cu=INR&tn=${encodeURIComponent('Raj Catering order')}`;
+
+        // For Google Pay, an intent / web link can be used:
+        const gpayIntent = `https://pay.google.com/gp/p/ui/pay?pa=${encodeURIComponent(MERCHANT_UPI)}&pn=${encodeURIComponent('Raj Catering')}&am=${encodeURIComponent(price)}&cu=INR&tn=${encodeURIComponent('Raj Catering order')}`;
+
+        // Open appropriate link
+        if(payMethod === 'gpay'){
+          window.open(gpayIntent, '_blank');
+        } else if(payMethod === 'phonepe'){
+          window.open(upiUri, '_blank');
+        }
+      }
+    });
+
+    // QR modal functions
+    function openQrModal(){
+      qrModal.style.display = 'flex';
+      qrModal.setAttribute('aria-hidden','false');
+    }
+    function closeQrModal(){
+      qrModal.style.display = 'none';
+      qrModal.setAttribute('aria-hidden','true');
+    }
+    closeQr.addEventListener('click', closeQrModal);
+    qrModal.addEventListener('click', (e) => { if(e.target === qrModal) closeQrModal(); });
+
+    // setup QR modal actions: copy upi, open upi intent
+    function setUpQrActions(amount){
+      // copy UPI id action
+      copyUpiBtn.onclick = () => {
+        if(!MERCHANT_UPI || MERCHANT_UPI === "YOUR_UPI_ID_HERE"){
+          toast('UPI ID not configured.', true);
+          return;
+        }
+        navigator.clipboard && navigator.clipboard.writeText(MERCHANT_UPI).then(()=> {
+          toast('UPI ID copied to clipboard');
+        }).catch(()=> {
+          toast('Could not copy to clipboard', true);
+        });
+      };
+
+      // open upi app - uses generic upi link with amount
+      openUpiApp.onclick = (ev) => {
+        ev.preventDefault();
+        if(!MERCHANT_UPI || MERCHANT_UPI === "YOUR_UPI_ID_HERE"){
+          toast('UPI ID not configured.', true);
+          return;
+        }
+        const upiLink = `upi://pay?pa=${encodeURIComponent(MERCHANT_UPI)}&pn=${encodeURIComponent('Raj Catering')}&am=${encodeURIComponent(amount)}&cu=INR&tn=${encodeURIComponent('Raj Catering order')}`;
+        window.open(upiLink, '_blank');
+      };
+    }
+
+    // Call support button
+    callSupport.addEventListener('click', (e) => {
+      window.location.href = 'tel:' + SUPPORT_PHONE;
+    });
+
+    // ---------------------------
+    // Save order to Firestore on submit
+    // ---------------------------
+    orderForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      saveOrderBtn.disabled = true;
+      saveOrderBtn.textContent = 'Saving...';
+
+      // Gather fields
+      const fullName = document.getElementById('fullName').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const phone = document.getElementById('phone').value.trim();
+      const address = document.getElementById('address').value.trim();
+      const refPoint = document.getElementById('refPoint').value.trim();
+      const vendor = document.getElementById('vendor').value;
+      const planRadio = document.querySelector('input[name="plan"]:checked');
+      const days = planRadio.value;
+      const price = parseInt(planRadio.dataset.price, 10);
+      const paymentMethod = document.querySelector('input[name="payment"]:checked').value;
+
+      // Validation
+      if(!fullName || !email || !phone || !address){
+        toast('Please fill required fields', true);
+        saveOrderBtn.disabled = false;
+        saveOrderBtn.textContent = 'Save & Continue';
+        return;
+      }
+
+      // Build order object
+      const orderObj = {
+        fullName,
+        email,
+        phone,
+        address,
+        refPoint,
+        vendor,
+        days: parseInt(days,10),
+        price,
+        paymentMethod,
+        isPaid: false, // default false
+        createdAt: serverTimestamp()
+      };
+
+      try {
+        // Save to Firestore 'orders' collection
+        const docRef = await addDoc(collection(db, 'orders'), orderObj);
+        console.log('Order saved:', docRef.id);
+        toast('Order saved! Redirecting to waiting page...', false, 2000);
+
+        // redirect after short delay
+        setTimeout(()=> {
+          window.location.href = 'waiting.html';
+        }, 900);
+
+      } catch (err) {
+        console.error('Save error', err);
+        toast('Failed to save order: ' + (err.message || ''), true, 5000);
+        saveOrderBtn.disabled = false;
+        saveOrderBtn.textContent = 'Save & Continue';
+      }
+    });
+
+    // On load, set initial QR actions for default price
+    document.addEventListener('DOMContentLoaded', () => {
+      updatePlanSummary();
+      setUpQrActions(parseInt(document.querySelector('input[name="plan"]:checked').dataset.price, 10));
+    });
+
+    // Also update QR intent when plan changes
+    document.querySelectorAll('input[name="plan"]').forEach(r => {
+      r.addEventListener('change', () => {
+        const p = parseInt(document.querySelector('input[name="plan"]:checked').dataset.price, 10);
+        setUpQrActions(p);
+      });
+    });
+
+  </script>
+</body>
+</html>

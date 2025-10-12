@@ -1,0 +1,154 @@
+/* order-form-style.css
+   Very detailed styling for the Raj Catering order form page
+   Primary colors: green (#27ae60) and orange (#ff7a00)
+   Single centered box with border, hover lift effects & lots of UI polish
+*/
+
+/* ---------- variables ---------- */
+:root{
+  --green: #27ae60;
+  --orange: #ff7a00;
+  --bg: #fbfbfb;
+  --muted: #6b7280;
+  --card-bg: #ffffff;
+  --radius-lg: 16px;
+  --radius-md: 12px;
+  --shadow-1: 0 10px 40px rgba(9,10,12,0.06);
+  --shadow-2: 0 28px 90px rgba(9,10,12,0.08);
+  --glass: rgba(255,255,255,0.7);
+  --maxw: 1100px;
+  --trans: 240ms cubic-bezier(.2,.9,.2,1);
+}
+
+/* ---------- reset ---------- */
+*{box-sizing:border-box}
+html,body{height:100%; margin:0; font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; background: var(--bg);}
+a{color:inherit}
+button{font-family:inherit}
+
+/* ensure page only shows the centered box */
+.page-root{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:18px;
+}
+
+/* The single box */
+.form-box{
+  width: min(var(--maxw), 96%);
+  max-width: var(--maxw);
+  border-radius: var(--radius-lg);
+  background: linear-gradient(180deg,#ffffff,#fcfff9);
+  box-shadow: var(--shadow-2);
+  border: 1px solid rgba(12,12,12,0.04);
+  padding: 26px;
+  transition: transform var(--trans), box-shadow var(--trans);
+  overflow:hidden;
+  outline: none;
+}
+
+/* Hover lift */
+.form-box:hover{ transform: translateY(-10px); box-shadow: 0 40px 140px rgba(9,10,12,0.12); }
+
+/* Header */
+.box-header{ text-align:center; margin-bottom:12px; }
+#formTitle{ font-size: clamp(22px, 3.4vw, 36px); margin: 0; color:var(--green); font-weight:900; letter-spacing:-0.6px; }
+.lead{ color:var(--muted); margin-top:8px; font-size:1rem; }
+
+/* The big form grid */
+.order-form{ display:flex; flex-direction:column; gap:18px; }
+.form-grid{
+  display:grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap:16px;
+}
+
+/* Field */
+.field{ display:flex; flex-direction:column; gap:8px; }
+.field.full{ grid-column:1/-1; }
+label{ font-weight:700; color:#111827; }
+input[type="text"], input[type="email"], input[type="tel"], select{
+  padding:12px 14px;
+  border-radius: 10px;
+  border:1px solid rgba(10,10,10,0.06);
+  background: linear-gradient(180deg,#fff,#fcfff9);
+  transition: border-color var(--trans), box-shadow var(--trans), transform var(--trans);
+  font-size: 15px;
+}
+input:focus, select:focus{ outline:none; border-color: var(--green); box-shadow: 0 8px 28px rgba(39,174,96,0.08); transform: translateY(-2px); }
+
+/* Radio style for plans */
+.field-days{ grid-column: 1 / -1; background: linear-gradient(180deg,#fff,#fffbf5); padding:14px; border-radius:12px; border:1px solid rgba(10,10,10,0.03); }
+.field-days legend{ font-weight:900; color:#0b1220; margin-bottom:8px; }
+.field-days .radio{ display:flex; align-items:center; gap:12px; padding:10px; border-radius:10px; cursor:pointer; border:1px dashed rgba(10,10,10,0.03); margin-bottom:8px; transition: transform var(--trans), box-shadow var(--trans), border-color var(--trans); }
+.field-days .radio input{ margin-right:8px; }
+.field-days .radio:hover{ transform: translateY(-6px); box-shadow: var(--shadow-1); }
+.field-days .plan-title{ font-weight:800; font-size:1rem; color:#0b1320; }
+.field-days .plan-price{ font-weight:900; color:var(--orange) }
+
+/* selected summary */
+.selected-summary{ display:flex; justify-content:space-between; padding:8px 12px; border-radius:8px; background: linear-gradient(90deg, rgba(39,174,96,0.03), rgba(255,122,0,0.02)); border:1px solid rgba(10,10,10,0.03); margin-top:6px; font-weight:800; }
+
+/* Payment options */
+.field-pay{ grid-column: 1 / -1; background: linear-gradient(180deg,#fff,#f7fff9); padding:14px; border-radius:12px; border:1px solid rgba(10,10,10,0.03); }
+.field-pay legend{ font-weight:900; color:#0b1320; margin-bottom:8px; }
+.pay-opt{ display:flex; gap:12px; padding:12px; align-items:center; cursor:pointer; border-radius:10px; transition: transform var(--trans), box-shadow var(--trans); }
+.pay-opt input{ margin-right:8px; }
+.pay-opt:hover{ transform: translateY(-6px); box-shadow: var(--shadow-1); }
+
+/* actions row */
+.actions-row{ display:flex; gap:12px; justify-content:space-between; align-items:center; margin-top:6px; }
+.left-actions{ display:flex; gap:12px; align-items:center; }
+.tel-link{ color:var(--muted); font-weight:800; }
+
+.right-actions{ display:flex; gap:16px; align-items:center; }
+
+/* price display */
+.price-display{ text-align:right; margin-right:6px; }
+.price-display .big-price{ font-size:1.6rem; color:var(--orange); font-weight:900; }
+
+/* pay buttons layout */
+.pay-buttons{ display:flex; gap:8px; align-items:center; }
+.btn{ padding:10px 14px; border-radius:12px; border:0; cursor:pointer; font-weight:900; transition: transform var(--trans), box-shadow var(--trans); }
+.btn.primary{ background: linear-gradient(90deg,var(--green), #16a34a); color:#fff; box-shadow: 0 12px 36px rgba(39,174,96,0.16); }
+.btn.primary:hover{ transform: translateY(-8px); box-shadow: 0 28px 80px rgba(39,174,96,0.22); }
+.btn.outline{ background:#fff; border:1px solid rgba(10,10,10,0.06); color:#0b1320; }
+.btn.call{ background: linear-gradient(90deg,#fff,#fff7f0); border:1px solid rgba(255,122,0,0.06); color:var(--orange); }
+
+/* footer note */
+.box-footer{ text-align:center; margin-top:10px; color:var(--muted); font-weight:700; }
+
+/* overlay QR modal */
+.overlay{ display:none; position:fixed; inset:0; background: rgba(6,10,18,0.6); align-items:center; justify-content:center; z-index:2000; padding:18px; }
+.overlay-panel{ width: min(560px, 92%); background:#fff; border-radius:14px; padding:20px; box-shadow: var(--shadow-2); position:relative; text-align:center; }
+.close-x{ position:absolute; right:12px; top:12px; background:transparent; border:0; font-size:20px; cursor:pointer; }
+.qr-wrap{ display:flex; align-items:center; justify-content:center; padding:10px; }
+.qr-wrap img{ width: 270px; height:270px; object-fit:contain; border-radius:12px; box-shadow:var(--shadow-1); border:1px solid rgba(10,10,10,0.04); }
+.qr-note{ color:var(--muted); margin-top:8px; }
+
+/* overlay actions */
+.overlay-actions{ display:flex; gap:10px; justify-content:center; margin-top:12px; }
+
+/* toast holder */
+.toast-holder{ position:fixed; right:18px; bottom:18px; z-index:3000; display:flex; flex-direction:column; gap:8px; }
+.toast{ background:#fff; padding:10px 12px; border-radius:10px; box-shadow:var(--shadow-1); font-weight:800; }
+.toast.err{ border-left: 4px solid #f87171; }
+.toast.ok{ border-left: 4px solid var(--green); }
+
+/* responsive */
+@media (max-width: 980px){
+  .form-grid{ grid-template-columns: 1fr; }
+  .selected-summary{ flex-direction:column; align-items:flex-start; gap:6px; }
+  .actions-row{ flex-direction:column; align-items:stretch; }
+  .right-actions{ justify-content:space-between; }
+}
+
+/* micro interactions */
+input:focus, select:focus, .radio:focus{ outline:none; box-shadow: 0 10px 30px rgba(39,174,96,0.08); transform: translateY(-3px); }
+.form-box:focus{ box-shadow: 0 40px 140px rgba(9,10,12,0.12); transform: translateY(-6px); }
+
+/* subtle animations */
+@keyframes floatIn { from{ opacity:0; transform: translateY(12px);} to{ opacity:1; transform:none; } }
+.form-box{ animation: floatIn 420ms ease both; }

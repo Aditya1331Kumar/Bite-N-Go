@@ -468,7 +468,7 @@
   });
 </script> -->
 
-<!-- <script type="module">
+ <script type="module">
   // -----------------------
   // Firebase SDKs import
   // -----------------------
@@ -573,116 +573,6 @@
       handleGoogleAuth();
     });
   });
-</script> -->
-<script type="module">
-  // Firebase SDKs import
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
-  import { getAuth, GoogleAuthProvider, signInWithPopup, fetchSignInMethodsForEmail } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
-  import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-firestore.js";
-
-  // ----------------------------
-  // Firebase Config
-  // ----------------------------
-  const firebaseConfig = {
-    apiKey: "AIzaSyDh5N6JTHYU0qjodJNUF7Yo76G5tt8AcX0",
-    authDomain: "bite-n-go.firebaseapp.com",
-    projectId: "bite-n-go",
-    storageBucket: "bite-n-go.firebasestorage.app",
-    messagingSenderId: "892092521856",
-    appId: "1:892092521856:web:1adb53b64a08d1270b7565",
-    measurementId: "G-EF3ZM1CZFW"
-  };
-
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const provider = new GoogleAuthProvider();
-  const db = getFirestore(app);
-
-  // ----------------------------
-  // LOGIN FUNCTION
-  // ----------------------------
-  async function handleLogin() {
-    try {
-      const result = await signInWithPopup(auth, provider);
-      const user = result.user;
-      const userEmail = user.email;
-      console.log("User login:", userEmail);
-
-      // Check Firestore for order data
-      const docRef = doc(db, "orders", userEmail);
-      const docSnap = await getDoc(docRef);
-
-      if (!docSnap.exists()) {
-        alert("No order found. Redirecting to vendor page...");
-        window.location.href = "vendor.html";
-      } else {
-        const data = docSnap.data();
-        console.log("Order found:", data);
-
-        if (data.isPaid === false) {
-          alert("Your payment is pending. Redirecting to vendor page...");
-          window.location.href = "vendor.html";
-        } else if (data.isPaid === true) {
-          alert("Payment verified. Redirecting to your dashboard...");
-          window.location.href = "dashboard.html";
-        }
-      }
-    } catch (error) {
-      console.error("Login error:", error);
-      alert(error.message);
-    }
-  }
-
-  // ----------------------------
-  // SIGNUP FUNCTION
-  // ----------------------------
-  async function handleSignup() {
-    try {
-      // Start Google signup popup
-      const result = await signInWithPopup(auth, provider);
-      const user = result.user;
-      const userEmail = user.email;
-
-      console.log("User signup attempt:", userEmail);
-
-      // Check if user already exists in Firebase Auth
-      const methods = await fetchSignInMethodsForEmail(auth, userEmail);
-
-      if (methods && methods.length > 0) {
-        // Already registered in Authentication
-        alert("This email is already signed up! Please login instead.");
-        // Switch modals
-        document.getElementById("signupModal").style.display = "none";
-        document.getElementById("loginModal").style.display = "block";
-        return;
-      }
-
-      // Not registered → proceed to vendor page
-      alert("Signup successful! Please continue to vendor page.");
-      window.location.href = "vendor.html";
-    } catch (error) {
-      console.error("Signup error:", error);
-      alert(error.message);
-    }
-  }
-
-  // ----------------------------
-  // BUTTON EVENT ATTACHMENTS
-  // ----------------------------
-  document.querySelectorAll(".btn-login").forEach((btn) => {
-    btn.addEventListener("click", (e) => {
-      e.preventDefault();
-      handleLogin();
-    });
-  });
-
-  document.querySelectorAll(".btn-signup").forEach((btn) => {
-    btn.addEventListener("click", (e) => {
-      e.preventDefault();
-      handleSignup();
-    });
-  });
-</script>
+</script> 
 </body>
 </html>

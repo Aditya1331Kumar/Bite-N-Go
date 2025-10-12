@@ -418,7 +418,7 @@
     }
   </script>
 
-  <script type="module">
+  <!-- <script type="module">
   // Firebase SDKs import
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
   import { getAuth, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
@@ -466,7 +466,115 @@
       handleGoogleAuth();
     });
   });
+</script> -->
+
+<script type="module">
+  // -----------------------
+  // Firebase SDKs import
+  // -----------------------
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
+  import { getAuth, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
+  import { getFirestore, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-firestore.js";
+
+  // -----------------------
+  // Firebase Config
+  // -----------------------
+  const firebaseConfig = {
+    apiKey: "AIzaSyDh5N6JTHYU0qjodJNUF7Yo76G5tt8AcX0",
+    authDomain: "bite-n-go.firebaseapp.com",
+    projectId: "bite-n-go",
+    storageBucket: "bite-n-go.firebasestorage.app",
+    messagingSenderId: "892092521856",
+    appId: "1:892092521856:web:1adb53b64a08d1270b7565",
+    measurementId: "G-EF3ZM1CZFW"
+  };
+
+  // -----------------------
+  // Initialize Firebase
+  // -----------------------
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const provider = new GoogleAuthProvider();
+  const db = getFirestore(app);
+
+  // -----------------------
+  // Google Auth Function
+  // -----------------------
+  async function handleGoogleAuth() {
+    try {
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+      console.log("User signed in:", user);
+
+      const email = user.email;
+
+      // Check Firestore orders collection for this user
+      const ordersRef = collection(db, "orders");
+      const q = query(ordersRef, where("email", "==", email));
+      const querySnapshot = await getDocs(q);
+
+      // --- CASE 1: No order found ---
+      if (querySnapshot.empty) {
+        // ✅ User signed up for first time
+        alert(`Welcome ${user.displayName}! Please place your first order.`);
+        document.getElementById("loginModal").style.display = "none";
+        document.getElementById("signupModal").style.display = "none";
+        window.location.href = "vendor.html";
+        return;
+      }
+
+      // --- CASE 2: Order exists ---
+      const orderData = querySnapshot.docs[0].data();
+
+      // If already signed up before (i.e. has an order)
+      if (orderData) {
+        // Check isPaid status
+        if (orderData.isPaid === true) {
+          // ✅ Already paid → redirect to dashboard
+          alert(`Welcome back ${user.displayName}! Redirecting to your dashboard.`);
+          document.getElementById("loginModal").style.display = "none";
+          document.getElementById("signupModal").style.display = "none";
+          window.location.href = "dashboard.html";
+        } else {
+          // ❌ Not paid yet → redirect to vendor page
+          alert(`Hi ${user.displayName}, please complete your payment to continue.`);
+          document.getElementById("loginModal").style.display = "none";
+          document.getElementById("signupModal").style.display = "none";
+          window.location.href = "vendor.html";
+        }
+      }
+
+    } catch (error) {
+      // -----------------------
+      // Error Handling
+      // -----------------------
+      console.error("Auth error:", error);
+      if (error.code === "auth/popup-closed-by-user") {
+        alert("Popup closed before signing in. Please try again.");
+      } else if (error.code === "auth/account-exists-with-different-credential") {
+        alert("This account is already signed up! Please use the Login button.");
+        // Optional: open login modal automatically
+        if (document.getElementById("signupModal"))
+          document.getElementById("signupModal").style.display = "none";
+        if (document.getElementById("loginModal"))
+          document.getElementById("loginModal").style.display = "block";
+      } else {
+        alert(error.message);
+      }
+    }
+  }
+
+  // -----------------------
+  // Attach click handler to ALL Google buttons
+  // -----------------------
+  document.querySelectorAll(".btn-google").forEach((btn) => {
+    btn.addEventListener("click", (e) => {
+      e.preventDefault();
+      handleGoogleAuth();
+    });
+  });
 </script>
+
 
 </body>
 </html>
